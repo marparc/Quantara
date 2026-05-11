@@ -37,18 +37,8 @@ export function useExchangeRates(
     setError(null);
 
     try {
-      const accessKey = process.env.NEXT_PUBLIC_ACCESS_KEY;
-      if (!accessKey) {
-        throw new Error(
-          "ACCESS_KEY is not defined in environment variables. Add NEXT_PUBLIC_ACCESS_KEY to your .env file."
-        );
-      }
-
-      const url = new URL(API_BASE_URL);
-      url.searchParams.set("format", "0");
-      url.searchParams.set("access_key", accessKey);
-
-      const response = await fetch(url.toString());
+      // Call your own API route — no key needed client-side
+      const response = await fetch("/api/rates/live");
 
       if (!response.ok) {
         throw new Error(
