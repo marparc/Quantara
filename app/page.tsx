@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
 // hooks
 import { useExchangeRates } from "@/hooks/useExchangeRate";
@@ -105,6 +105,103 @@ function RateCard({
           </p>
         )}
       </div>
+    </div>
+  );
+}
+
+// ─── Dashboard: Top Movers ────────────────────────────────────────────────────
+const PERIODS = [
+  { label: "1M", days: 30 },
+  { label: "3M", days: 90 },
+  { label: "6M", days: 180 },
+  { label: "1Y", days: 365 },
+  { label: "3Y", days: 1095 },
+  { label: "5Y", days: 1825 },
+  { label: "10Y", days: 3650 },
+];
+
+function TopMoversSection() {
+  const { isLoading, error, fetchChange, topMovers } = useChange();
+  const [activePeriod, setActivePeriod] = useState(PERIODS[0]);
+
+  useEffect(() => {
+    fetchChange(daysAgoStr(activePeriod.days), todayStr());
+  }, [activePeriod]);
+
+  return (
+    <div className="mt-10">
+      {/* Header + period filter */}
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <p className="text-xs text-zinc-600 uppercase tracking-widest">
+          Top Movers · 1 USD =
+        </p>
+        <div className="flex gap-1 p-1 rounded-xl bg-zinc-800/60 border border-zinc-700/40">
+          {PERIODS.map((p) => (
+            <button
+              key={p.label}
+              onClick={() => setActivePeriod(p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
+                activePeriod.label === p.label
+                  ? "bg-amber-400 text-zinc-900"
+                  : "text-zinc-400 hover:text-zinc-200"
+              }`}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {error && <ErrorBanner message={error} />}
+
+      {isLoading && (
+        <div className="flex items-center justify-center py-12">
+          <div className="relative h-10 w-10">
+            <div className="absolute inset-0 rounded-full border-2 border-amber-200/20" />
+            <div className="absolute inset-0 rounded-full border-t-2 border-amber-400 animate-spin" />
+          </div>
+        </div>
+      )}
+
+      {!isLoading && topMovers.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {topMovers.slice(0, 20).map((m) => {
+            const { name, flag } = getCurrencyInfo(m.code);
+            const isPositive = m.change_pct >= 0;
+            return (
+              <div
+                key={m.code}
+                className="group relative overflow-hidden rounded-2xl border border-zinc-700/50 bg-zinc-800/60 hover:border-zinc-600/70 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-900/20"
+              >
+                <div className="p-4">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-2xl leading-none">{flag}</span>
+                    <span
+                      className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-full ${
+                        isPositive
+                          ? "bg-emerald-500/15 text-emerald-400"
+                          : "bg-red-500/15 text-red-400"
+                      }`}
+                    >
+                      {isPositive ? "+" : ""}
+                      {m.change_pct.toFixed(2)}%
+                    </span>
+                  </div>
+                  <p className="text-xs text-zinc-500 mb-0.5 truncate">
+                    {name}
+                  </p>
+                  <p className="text-sm font-mono font-semibold text-zinc-100 tabular-nums">
+                    {m.code}
+                  </p>
+                  <p className="text-xs text-zinc-600 mono mt-1 tabular-nums">
+                    {formatRate(m.start_rate)} → {formatRate(m.end_rate)}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -930,6 +1027,9 @@ export default function ExchangeRatePage() {
                 <span className="text-zinc-400">{search}</span>"
               </p>
             )}
+
+            {/* ── Top Movers ── */}
+            {!search && <TopMoversSection />}
           </section>
         )}
 
