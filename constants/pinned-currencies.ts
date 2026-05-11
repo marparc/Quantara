@@ -1,0 +1,16 @@
+export const PINNED_CURRENCIES = [
+  "EUR",
+  "GBP",
+  "JPY",
+  "AUD",
+  "CAD",
+  "CHF",
+  "CNY",
+  "PHP",
+  "SGD",
+  "HKD",
+  "KRW",
+  "INR",
+  "MXN",
+  "BRL",
+];
