@@ -240,8 +240,8 @@ function Spinner() {
   return (
     <div className="flex items-center justify-center py-24">
       <div className="relative h-10 w-10">
-        <div className="absolute inset-0 rounded-full border-2 border-amber-200/20" />
-        <div className="absolute inset-0 rounded-full border-t-2 border-amber-400 animate-spin" />
+        <div className="absolute inset-0 rounded-full border-2 border-teal-300/20" />
+        <div className="absolute inset-0 rounded-full border-t-2 border-teal-400 animate-spin" />
       </div>
     </div>
   );
@@ -265,12 +265,12 @@ function SortIcon({ active, dir }: { active: boolean; dir: "asc" | "desc" }) {
     >
       <span
         className={`block w-0 h-0 border-l-[3px] border-r-[3px] border-b-[4px] border-transparent ${
-          active && dir === "asc" ? "border-b-amber-400" : "border-b-zinc-400"
+          active && dir === "asc" ? "border-b-teal-400" : "border-b-zinc-400"
         }`}
       />
       <span
         className={`block w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-transparent ${
-          active && dir === "desc" ? "border-t-amber-400" : "border-t-zinc-400"
+          active && dir === "desc" ? "border-t-teal-400" : "border-t-zinc-400"
         }`}
       />
     </span>
@@ -429,7 +429,7 @@ function DashboardListView({
               setPage(1);
             }}
             placeholder="Search currency…"
-            className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-zinc-800/80 border border-zinc-700/60 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-amber-400/50 transition-all"
+            className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07] text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-teal-500/40 transition-all"
           />
           {search && (
             <button
@@ -446,7 +446,7 @@ function DashboardListView({
           <span className="text-xs text-zinc-600 uppercase tracking-widest hidden sm:block">
             Change
           </span>
-          <div className="flex gap-1 p-1 rounded-xl bg-zinc-800/60 border border-zinc-700/40">
+          <div className="flex gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/[0.05]">
             {PERIODS.map((p) => (
               <button
                 key={p.label}
@@ -456,7 +456,7 @@ function DashboardListView({
                 }}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activePeriod.label === p.label
-                    ? "bg-amber-400 text-zinc-900"
+                    ? "bg-gradient-to-r from-teal-500 to-violet-600 text-white"
                     : "text-zinc-400 hover:text-zinc-200"
                 }`}
               >
@@ -465,18 +465,18 @@ function DashboardListView({
             ))}
           </div>
           {changeLoading && (
-            <div className="w-4 h-4 rounded-full border-t border-amber-400 animate-spin" />
+            <div className="w-4 h-4 rounded-full border-t border-teal-400 animate-spin" />
           )}
         </div>
       </div>
 
       {/* Table */}
-      <div className="rounded-2xl border border-zinc-700/50 bg-zinc-900/60 overflow-hidden">
+      <div className="rounded-2xl border border-white/[0.06] bg-[#0d1117]/80 overflow-hidden">
         {/* Table header */}
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px]">
             <thead>
-              <tr className="border-b border-zinc-700/50">
+              <tr className="border-b border-white/[0.06]">
                 <th
                   className="px-4 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider cursor-pointer select-none hover:text-zinc-300 transition-colors w-12"
                   onClick={() => toggleSort("rank")}
@@ -514,14 +514,14 @@ function DashboardListView({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-white/[0.05]">
               {paginated.map((row) => {
                 const isPos = row.change_pct !== null && row.change_pct >= 0;
                 const isNeg = row.change_pct !== null && row.change_pct < 0;
                 return (
                   <tr
                     key={row.code}
-                    className="hover:bg-zinc-800/40 transition-colors duration-150 group"
+                    className="hover:bg-white/[0.03] transition-colors duration-150 group"
                   >
                     {/* Rank */}
                     <td className="px-4 py-3 text-sm text-zinc-600 mono tabular-nums">
@@ -561,7 +561,7 @@ function DashboardListView({
                               ? "text-emerald-400 bg-emerald-400/10"
                               : isNeg
                               ? "text-red-400 bg-red-400/10"
-                              : "text-zinc-400 bg-zinc-800"
+                              : "text-zinc-400 bg-[#0d1117]"
                           }`}
                         >
                           {isPos && "▲"}
@@ -597,14 +597,14 @@ function DashboardListView({
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-3 border-t border-zinc-800/60 flex items-center justify-between">
+        <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
           <span className="text-xs text-zinc-600 mono">
             {filtered.length} currencies · showing {paginated.length}
           </span>
           {hasMore && (
             <button
               onClick={() => setPage((p) => p + 1)}
-              className="text-xs text-amber-400 hover:text-amber-300 transition-colors font-medium"
+              className="text-xs text-teal-400 hover:text-teal-300 transition-colors font-medium"
             >
               Show more ↓
             </button>
@@ -634,10 +634,10 @@ function RateCard({
 
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-900/20 ${
+      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-teal-900/20 ${
         isBase
-          ? "border-amber-400/40 bg-amber-400/5"
-          : "border-zinc-700/50 bg-zinc-800/60 hover:border-zinc-600/70"
+          ? "border-teal-500/30 bg-teal-500/5"
+          : "border-white/[0.06] bg-[#0d1117]/70 hover:border-teal-500/30"
       }`}
     >
       <div className="p-4">
@@ -646,8 +646,8 @@ function RateCard({
           <span
             className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-full ${
               isBase
-                ? "bg-amber-400/20 text-amber-300"
-                : "bg-zinc-700 text-zinc-400"
+                ? "bg-teal-500/15 text-teal-300"
+                : "bg-white/[0.05] text-zinc-400"
             }`}
           >
             {code}
@@ -658,7 +658,7 @@ function RateCard({
           {formatRate(rate)}
         </p>
         {convertedAmount !== null && (
-          <p className="text-sm font-mono text-amber-400/80 mt-1 tabular-nums">
+          <p className="text-sm font-mono text-teal-400/80 mt-1 tabular-nums">
             ={" "}
             {convertedAmount.toLocaleString("en-US", {
               maximumFractionDigits: 4,
@@ -701,13 +701,13 @@ function HistoricalTab({ allCodes }: { allCodes: string[] }) {
             value={date}
             max={daysAgoStr(1)}
             onChange={(e) => setDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/50 transition-all font-mono"
+            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
           />
         </div>
         <button
           onClick={() => fetchHistorical(date)}
           disabled={isLoading || !date}
-          className="px-5 py-2.5 rounded-xl bg-amber-400 text-zinc-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Loading…" : "Fetch Rates"}
         </button>
@@ -717,8 +717,8 @@ function HistoricalTab({ allCodes }: { allCodes: string[] }) {
 
       {data && (
         <>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-xs text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
             Historical rates for{" "}
             <span className="text-zinc-200 font-medium mono">{data.date}</span>
             <span className="text-zinc-600">·</span>
@@ -743,7 +743,7 @@ function HistoricalTab({ allCodes }: { allCodes: string[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search currency…"
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-zinc-800/80 border border-zinc-700/60 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-amber-400/50 transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07] text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-teal-500/40 transition-all"
             />
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -794,7 +794,7 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
 
   return (
     <section className="max-w-lg mx-auto space-y-5">
-      <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-6 space-y-5">
+      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 space-y-5">
         <div>
           <label className="text-xs text-zinc-500 uppercase tracking-widest mb-2 block">
             Amount
@@ -805,7 +805,7 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
             onChange={(e) => setAmount(e.target.value)}
             min="0"
             step="any"
-            className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700 text-xl font-medium mono text-zinc-100 focus:outline-none focus:border-amber-400/60 transition-all"
+            className="w-full px-4 py-3 rounded-xl bg-[#0a0e12] border border-white/[0.08] text-xl font-medium mono text-zinc-100 focus:outline-none focus:border-teal-500/40 transition-all"
             placeholder="0.00"
           />
         </div>
@@ -818,7 +818,7 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
             <select
               value={from}
               onChange={(e) => setFrom(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/60 transition-all appearance-none cursor-pointer"
+              className="w-full px-4 py-3 rounded-xl bg-[#0a0e12] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all appearance-none cursor-pointer"
             >
               {["USD", ...allCodes].map((c) => (
                 <option key={c} value={c}>
@@ -829,7 +829,7 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
           </div>
           <button
             onClick={handleSwap}
-            className="mt-6 p-2.5 rounded-xl bg-zinc-700 hover:bg-amber-400/20 border border-zinc-600 hover:border-amber-400/40 text-zinc-400 hover:text-amber-400 transition-all duration-200"
+            className="mt-6 p-2.5 rounded-xl bg-white/[0.04] hover:bg-violet-500/20 border border-white/[0.07] hover:border-violet-500/40 text-zinc-400 hover:text-violet-400 transition-all duration-200"
           >
             <svg
               className="w-4 h-4"
@@ -852,7 +852,7 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
             <select
               value={to}
               onChange={(e) => setTo(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/60 transition-all appearance-none cursor-pointer"
+              className="w-full px-4 py-3 rounded-xl bg-[#0a0e12] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all appearance-none cursor-pointer"
             >
               {["USD", ...allCodes].map((c) => (
                 <option key={c} value={c}>
@@ -866,7 +866,7 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
         <button
           onClick={handleConvert}
           disabled={isLoading}
-          className="w-full py-3 rounded-xl bg-amber-400 text-zinc-900 font-semibold text-sm hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white font-semibold text-sm hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Converting…" : "Convert via API"}
         </button>
@@ -874,12 +874,12 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
         {error && <ErrorBanner message={error} />}
 
         {data && result !== null && (
-          <div className="rounded-xl bg-zinc-900/80 border border-zinc-700/40 p-5">
+          <div className="rounded-xl bg-[#0a0e12]/80 border border-white/[0.05] p-5">
             <p className="text-xs text-zinc-600 uppercase tracking-widest mb-3">
               Result
             </p>
             <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-4xl font-semibold mono text-amber-400 tabular-nums">
+              <span className="text-4xl font-semibold mono text-teal-300 tabular-nums">
                 {result.toLocaleString("en-US", {
                   minimumFractionDigits: 2,
                   maximumFractionDigits: 4,
@@ -910,8 +910,8 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
                 onClick={() => setAmount(String(q))}
                 className={`px-3 py-1.5 rounded-lg text-xs mono transition-all ${
                   parseFloat(amount) === q
-                    ? "bg-amber-400/20 text-amber-300 border border-amber-400/40"
-                    : "bg-zinc-800 text-zinc-500 border border-zinc-700 hover:text-zinc-300 hover:border-zinc-600"
+                    ? "bg-teal-500/15 text-teal-300 border border-violet-500/40"
+                    : "bg-[#0d1117] text-zinc-500 border border-white/[0.08] hover:text-zinc-300 hover:border-zinc-600"
                 }`}
               >
                 {q.toLocaleString()}
@@ -951,7 +951,7 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/50 transition-all font-mono"
+            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
           />
         </div>
         <div className="flex flex-col gap-1.5">
@@ -962,7 +962,7 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/50 transition-all font-mono"
+            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
           />
         </div>
         <div className="flex flex-col gap-1.5">
@@ -972,7 +972,7 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/50 transition-all appearance-none cursor-pointer"
+            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all appearance-none cursor-pointer"
           >
             {allCodes.map((c) => (
               <option key={c} value={c}>
@@ -984,7 +984,7 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
         <button
           onClick={() => fetchTimeframe(startDate, endDate)}
           disabled={isLoading}
-          className="px-5 py-2.5 rounded-xl bg-amber-400 text-zinc-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Loading…" : "Fetch Timeframe"}
         </button>
@@ -994,8 +994,8 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
 
       {data && (
         <>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-xs text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
             <span className="mono">
               {data.start_date} → {data.end_date}
             </span>
@@ -1004,7 +1004,7 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
           </div>
 
           {series.length > 1 && (
-            <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 p-5">
+            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5">
               <p className="text-xs text-zinc-500 uppercase tracking-widest mb-4">
                 USD → {currency} rate over time
               </p>
@@ -1029,10 +1029,10 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
                     <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
                       <stop
                         offset="0%"
-                        stopColor="#fbbf24"
+                        stopColor="#2dd4bf"
                         stopOpacity="0.15"
                       />
-                      <stop offset="100%" stopColor="#fbbf24" stopOpacity="0" />
+                      <stop offset="100%" stopColor="#2dd4bf" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   <polygon
@@ -1066,7 +1066,7 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
                       })
                       .join(" ")}
                     fill="none"
-                    stroke="#fbbf24"
+                    stroke="#2dd4bf"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -1084,17 +1084,17 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
             </div>
           )}
 
-          <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 overflow-hidden">
-            <div className="px-5 py-3 border-b border-zinc-700/50">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] overflow-hidden">
+            <div className="px-5 py-3 border-b border-white/[0.06]">
               <p className="text-xs text-zinc-500 uppercase tracking-widest">
                 Daily rates — USD → {currency}
               </p>
             </div>
-            <div className="max-h-72 overflow-y-auto divide-y divide-zinc-700/30">
+            <div className="max-h-72 overflow-y-auto divide-y divide-white/[0.04]">
               {series.map((p: { date: string; rate: number }) => (
                 <div
                   key={p.date}
-                  className="flex items-center justify-between px-5 py-3 hover:bg-zinc-700/20 transition-colors"
+                  className="flex items-center justify-between px-5 py-3 hover:bg-white/[0.03] transition-colors"
                 >
                   <span className="text-sm text-zinc-400 mono">{p.date}</span>
                   <span className="text-sm font-medium text-zinc-100 mono tabular-nums">
@@ -1138,7 +1138,7 @@ function ChangeTab() {
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/50 transition-all font-mono"
+            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
           />
         </div>
         <div className="flex flex-col gap-1.5">
@@ -1149,13 +1149,13 @@ function ChangeTab() {
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-sm text-zinc-200 focus:outline-none focus:border-amber-400/50 transition-all font-mono"
+            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
           />
         </div>
         <button
           onClick={() => fetchChange(startDate, endDate)}
           disabled={isLoading}
-          className="px-5 py-2.5 rounded-xl bg-amber-400 text-zinc-900 text-sm font-semibold hover:bg-amber-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Loading…" : "Fetch Changes"}
         </button>
@@ -1165,8 +1165,8 @@ function ChangeTab() {
 
       {data && (
         <>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-800/80 border border-zinc-700/50 text-xs text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
             Change from{" "}
             <span className="text-zinc-200 font-medium mono">
               {data.start_date}
@@ -1177,8 +1177,8 @@ function ChangeTab() {
             </span>
           </div>
 
-          <div className="rounded-2xl border border-zinc-700/50 bg-zinc-800/40 overflow-hidden">
-            <div className="px-5 py-3 border-b border-zinc-700/50 flex items-center justify-between">
+          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] overflow-hidden">
+            <div className="px-5 py-3 border-b border-white/[0.06] flex items-center justify-between">
               <p className="text-xs text-zinc-500 uppercase tracking-widest">
                 Top movers (by % change vs USD)
               </p>
@@ -1186,7 +1186,7 @@ function ChangeTab() {
                 {topMovers.length} currencies
               </span>
             </div>
-            <div className="divide-y divide-zinc-700/30">
+            <div className="divide-y divide-white/[0.04]">
               {displayed.map((m) => {
                 const { name } = getCurrencyInfo(m.code);
                 const isPositive = m.change_pct >= 0;
@@ -1194,7 +1194,7 @@ function ChangeTab() {
                 return (
                   <div
                     key={m.code}
-                    className="px-5 py-3.5 hover:bg-zinc-700/20 transition-colors"
+                    className="px-5 py-3.5 hover:bg-white/[0.03] transition-colors"
                   >
                     <div className="flex items-center justify-between mb-1.5">
                       <div className="flex items-center gap-2.5">
@@ -1222,10 +1222,10 @@ function ChangeTab() {
                         </p>
                       </div>
                     </div>
-                    <div className="h-1 rounded-full bg-zinc-700/50 overflow-hidden">
+                    <div className="h-1 rounded-full bg-violet-900/40 overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
-                          isPositive ? "bg-emerald-500/60" : "bg-red-500/60"
+                          isPositive ? "bg-teal-500/60" : "bg-red-500/60"
                         }`}
                         style={{ width: `${barWidth}%` }}
                       />
@@ -1239,7 +1239,7 @@ function ChangeTab() {
           {topMovers.length > 20 && (
             <button
               onClick={() => setShowAll((v) => !v)}
-              className="w-full py-2.5 rounded-xl border border-zinc-700 text-sm text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all"
+              className="w-full py-2.5 rounded-xl border border-white/[0.08] text-sm text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all"
             >
               {showAll
                 ? "Show fewer"
@@ -1289,7 +1289,7 @@ export default function ExchangeRatePage() {
 
   return (
     <div
-      className="min-h-screen bg-zinc-950 text-zinc-100"
+      className="min-h-screen bg-[#090c0f] text-zinc-100"
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       <style>{`
@@ -1301,7 +1301,9 @@ export default function ExchangeRatePage() {
 
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(251,191,36,0.06),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(20,184,166,0.07),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_60%,rgba(139,92,246,0.06),transparent)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_30%_20%_at_20%_80%,rgba(20,184,166,0.04),transparent)]" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
