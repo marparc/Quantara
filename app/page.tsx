@@ -9,20 +9,172 @@ import { useHistoricalRates } from "@/hooks/useHistoricalRates";
 import { useConvert } from "@/hooks/useConvert";
 import { useTimeframe } from "@/hooks/useTimeframe";
 // constants
+import { CURRENCY_LABELS } from "@/constants/currency-labels";
 import { PINNED_CURRENCIES } from "@/constants/pinned-currencies";
-import { CURRENCY_TO_COUNTRY } from "@/constants/currency-to-country";
-import { PERIODS } from "@/constants/periods";
 
-//helpers
-import { formatRate } from "@/helpers/rate";
-import { getCurrencyInfo } from "@/helpers/currency";
-import { todayStr } from "@/helpers/date";
-import { daysAgoStr } from "@/helpers/date";
+// ─── Currency → Country code map for flag API ─────────────────────────────────
+const CURRENCY_TO_COUNTRY: Record<string, string> = {
+  AED: "ae",
+  AFN: "af",
+  ALL: "al",
+  AMD: "am",
+  ANG: "an",
+  AOA: "ao",
+  ARS: "ar",
+  AUD: "au",
+  AWG: "aw",
+  AZN: "az",
+  BAM: "ba",
+  BBD: "bb",
+  BDT: "bd",
+  BGN: "bg",
+  BHD: "bh",
+  BIF: "bi",
+  BMD: "bm",
+  BND: "bn",
+  BOB: "bo",
+  BRL: "br",
+  BSD: "bs",
+  BTN: "bt",
+  BWP: "bw",
+  BYN: "by",
+  BZD: "bz",
+  CAD: "ca",
+  CDF: "cd",
+  CHF: "ch",
+  CLP: "cl",
+  CNY: "cn",
+  COP: "co",
+  CRC: "cr",
+  CUP: "cu",
+  CVE: "cv",
+  CZK: "cz",
+  DJF: "dj",
+  DKK: "dk",
+  DOP: "do",
+  DZD: "dz",
+  EGP: "eg",
+  ERN: "er",
+  ETB: "et",
+  EUR: "eu",
+  FJD: "fj",
+  FKP: "fk",
+  GBP: "gb",
+  GEL: "ge",
+  GHS: "gh",
+  GIP: "gi",
+  GMD: "gm",
+  GNF: "gn",
+  GTQ: "gt",
+  GYD: "gy",
+  HKD: "hk",
+  HNL: "hn",
+  HRK: "hr",
+  HTG: "ht",
+  HUF: "hu",
+  IDR: "id",
+  ILS: "il",
+  INR: "in",
+  IQD: "iq",
+  IRR: "ir",
+  ISK: "is",
+  JMD: "jm",
+  JOD: "jo",
+  JPY: "jp",
+  KES: "ke",
+  KGS: "kg",
+  KHR: "kh",
+  KMF: "km",
+  KPW: "kp",
+  KRW: "kr",
+  KWD: "kw",
+  KYD: "ky",
+  KZT: "kz",
+  LAK: "la",
+  LBP: "lb",
+  LKR: "lk",
+  LRD: "lr",
+  LSL: "ls",
+  LYD: "ly",
+  MAD: "ma",
+  MDL: "md",
+  MGA: "mg",
+  MKD: "mk",
+  MMK: "mm",
+  MNT: "mn",
+  MOP: "mo",
+  MRU: "mr",
+  MUR: "mu",
+  MVR: "mv",
+  MWK: "mw",
+  MXN: "mx",
+  MYR: "my",
+  MZN: "mz",
+  NAD: "na",
+  NGN: "ng",
+  NIO: "ni",
+  NOK: "no",
+  NPR: "np",
+  NZD: "nz",
+  OMR: "om",
+  PAB: "pa",
+  PEN: "pe",
+  PGK: "pg",
+  PHP: "ph",
+  PKR: "pk",
+  PLN: "pl",
+  PYG: "py",
+  QAR: "qa",
+  RON: "ro",
+  RSD: "rs",
+  RUB: "ru",
+  RWF: "rw",
+  SAR: "sa",
+  SBD: "sb",
+  SCR: "sc",
+  SDG: "sd",
+  SEK: "se",
+  SGD: "sg",
+  SHP: "sh",
+  SLL: "sl",
+  SOS: "so",
+  SRD: "sr",
+  STN: "st",
+  SVC: "sv",
+  SYP: "sy",
+  SZL: "sz",
+  THB: "th",
+  TJS: "tj",
+  TMT: "tm",
+  TND: "tn",
+  TOP: "to",
+  TRY: "tr",
+  TTD: "tt",
+  TWD: "tw",
+  TZS: "tz",
+  UAH: "ua",
+  UGX: "ug",
+  USD: "us",
+  UYU: "uy",
+  UZS: "uz",
+  VES: "ve",
+  VND: "vn",
+  VUV: "vu",
+  WST: "ws",
+  XAF: "cm",
+  XCD: "ag",
+  XOF: "sn",
+  XPF: "pf",
+  YER: "ye",
+  ZAR: "za",
+  ZMW: "zm",
+  ZWL: "zw",
+};
 
 function getFlagUrl(code: string): string | null {
   const country = CURRENCY_TO_COUNTRY[code];
   if (!country) return null;
-  return `https://flagcdn.com/24x18/${country}.png`;
+  return `https://flagsapi.com/${country.toUpperCase()}/flat/64.png`;
 }
 
 // ─── Flag image component ─────────────────────────────────────────────────────
@@ -45,8 +197,8 @@ function CurrencyFlag({
       src={url}
       alt={`${name} flag`}
       width={24}
-      height={18}
-      className={`rounded-sm object-cover flex-shrink-0 ${className}`}
+      height={24}
+      className={`object-cover flex-shrink-0 ${className}`}
       onError={(e) => {
         // Fallback to globe emoji if image fails
         const target = e.currentTarget;
@@ -58,6 +210,29 @@ function CurrencyFlag({
       }}
     />
   );
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+function formatRate(raw: number | string): string {
+  const rate = Number(raw);
+  if (!isFinite(rate)) return "—";
+  if (rate >= 1000)
+    return rate.toLocaleString("en-US", { maximumFractionDigits: 2 });
+  if (rate >= 1) return rate.toFixed(4);
+  return rate.toFixed(6);
+}
+
+function getCurrencyInfo(code: string) {
+  return CURRENCY_LABELS[code] ?? { name: code, flag: "🌐" };
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+function daysAgoStr(n: number) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return d.toISOString().slice(0, 10);
 }
 
 // ─── Shared sub-components ────────────────────────────────────────────────────
@@ -103,6 +278,15 @@ function SortIcon({ active, dir }: { active: boolean; dir: "asc" | "desc" }) {
 }
 
 // ─── Dashboard: List View ─────────────────────────────────────────────────────
+const PERIODS = [
+  { label: "1W", days: 7 },
+  { label: "1M", days: 30 },
+  { label: "3M", days: 90 },
+  { label: "6M", days: 180 },
+  { label: "1Y", days: 365 },
+  { label: "3Y", days: 1095 },
+  { label: "5Y", days: 1825 },
+];
 
 type SortKey = "rank" | "rate" | "change_pct";
 type SortDir = "asc" | "desc";
