@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/molecules/navbar";
+import { Footer } from "@/components/molecules/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         <Navbar />
         {/* pt-14 offsets the fixed navbar height */}
         <main className="flex-1 pt-14">{children}</main>
+        <Footer />
       </body>
     </html>
   );

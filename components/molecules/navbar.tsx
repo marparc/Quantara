@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "../atoms/button";
 
 export function Navbar() {
@@ -14,35 +15,13 @@ export function Navbar() {
         <Link href="/" className="flex items-center gap-2.5 group">
           {/* Icon mark */}
           <div className="relative w-7 h-7 flex-shrink-0">
-            <svg
-              viewBox="0 0 28 28"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+            <Image
+              src="/logo.png"
+              alt="Quantara logo"
+              width={28}
+              height={28}
               className="w-7 h-7"
-            >
-              <defs>
-                <linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#2dd4bf" />
-                  <stop offset="100%" stopColor="#7c3aed" />
-                </linearGradient>
-              </defs>
-              {/* Hexagon-inspired Q mark */}
-              <path
-                d="M14 2L24.39 8V20L14 26L3.61 20V8L14 2Z"
-                stroke="url(#logoGrad)"
-                strokeWidth="1.5"
-                fill="none"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M10 14h5m0 0l-2-3m2 3l-2 3"
-                stroke="url(#logoGrad)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <circle cx="17" cy="14" r="1.5" fill="url(#logoGrad)" />
-            </svg>
+            />
           </div>
 
           {/* Wordmark */}
