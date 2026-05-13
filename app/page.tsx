@@ -100,8 +100,8 @@ const FEATURES = [
     ),
     title: "Real-Time Rates",
     desc: "Live exchange rates refreshed every second across 170+ currency pairs from trusted sources.",
-    gradient: "from-teal-500/20 to-teal-600/10",
-    accent: "text-teal-400",
+    gradient: "from-blue-500/20 to-blue-600/10",
+    accent: "text-blue-400",
   },
   {
     icon: (
@@ -121,8 +121,8 @@ const FEATURES = [
     ),
     title: "Historical Analysis",
     desc: "Explore up to 10 years of daily rate history. Visualise trends for any currency pair.",
-    gradient: "from-violet-500/20 to-violet-600/10",
-    accent: "text-violet-400",
+    gradient: "from-purple-500/20 to-purple-600/10",
+    accent: "text-purple-400",
   },
   {
     icon: (
@@ -142,8 +142,8 @@ const FEATURES = [
     ),
     title: "Instant Converter",
     desc: "Convert any amount between 170+ currencies instantly at the most accurate live rate.",
-    gradient: "from-teal-500/20 to-violet-500/10",
-    accent: "text-teal-400",
+    gradient: "from-blue-500/20 to-purple-500/10",
+    accent: "text-blue-400",
   },
   {
     icon: (
@@ -163,8 +163,8 @@ const FEATURES = [
     ),
     title: "Rate Alerts",
     desc: "Set a target rate and get notified the moment the market hits your price.",
-    gradient: "from-violet-500/20 to-fuchsia-500/10",
-    accent: "text-violet-400",
+    gradient: "from-purple-500/20 to-fuchsia-500/10",
+    accent: "text-purple-400",
   },
   {
     icon: (
@@ -184,8 +184,8 @@ const FEATURES = [
     ),
     title: "Developer API",
     desc: "Integrate live and historical rate data into your app with a clean, well-documented REST API.",
-    gradient: "from-teal-500/20 to-teal-400/10",
-    accent: "text-teal-400",
+    gradient: "from-blue-500/20 to-indigo-400/10",
+    accent: "text-blue-400",
   },
   {
     icon: (
@@ -205,15 +205,15 @@ const FEATURES = [
     ),
     title: "Trusted Data",
     desc: "Sourced from central banks and top-tier financial providers with transparent methodology.",
-    gradient: "from-violet-500/20 to-violet-400/10",
-    accent: "text-violet-400",
+    gradient: "from-purple-500/20 to-purple-400/10",
+    accent: "text-purple-400",
   },
 ];
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero({ rateCount }: { rateCount: number }) {
   return (
-    <section className="relative min-h-[95vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+    <section className="relative min-h-[calc(100vh-14rem)] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
       <style>{`
         @keyframes fadeUp {
           from { opacity: 0; transform: translateY(24px); }
@@ -253,7 +253,7 @@ function Hero({ rateCount }: { rateCount: number }) {
         .delay-600 { animation-delay: 0.6s; }
         .animate-ticker { animation: ticker 28s linear infinite; }
         .gradient-shimmer {
-          background: linear-gradient(90deg, #2dd4bf, #818cf8, #a78bfa, #2dd4bf);
+          background: linear-gradient(90deg, #60a5fa, #818cf8, #a855f7, #c084fc, #60a5fa);
           background-size: 200% auto;
           background-clip: text;
           -webkit-background-clip: text;
@@ -279,7 +279,7 @@ function Hero({ rateCount }: { rateCount: number }) {
           className="absolute top-1/4 left-1/2 w-[700px] h-[700px] rounded-full"
           style={{
             background:
-              "radial-gradient(circle, rgba(45,212,191,0.06) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)",
             animation: "orbFloat 9s ease-in-out infinite",
             transform: "translateX(-50%)",
           }}
@@ -288,7 +288,7 @@ function Hero({ rateCount }: { rateCount: number }) {
           className="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full"
           style={{
             background:
-              "radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)",
             animation: "orbFloat2 11s ease-in-out infinite",
           }}
         />
@@ -296,15 +296,15 @@ function Hero({ rateCount }: { rateCount: number }) {
           className="absolute bottom-1/4 right-1/5 w-[400px] h-[400px] rounded-full"
           style={{
             background:
-              "radial-gradient(circle, rgba(45,212,191,0.04) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%)",
             animation: "orbFloat 13s ease-in-out infinite reverse",
           }}
         />
       </div>
 
       {/* Badge */}
-      <div className="animate-fade-up relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-teal-500/25 bg-teal-500/[0.07] text-teal-400 text-xs font-medium mb-8 backdrop-blur-sm">
-        <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+      <div className="animate-fade-up relative inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-blue-500/25 bg-blue-500/[0.07] text-blue-400 text-xs font-medium mb-8 backdrop-blur-sm">
+        <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
         Live rates ·{" "}
         {rateCount > 0 ? `${rateCount}+ currencies` : "170+ currencies"}
       </div>
@@ -363,7 +363,7 @@ function Hero({ rateCount }: { rateCount: number }) {
           { label: "Uptime", value: 99, suffix: ".9%" },
           { label: "Refresh rate", value: 1, suffix: "s" },
         ].map((s) => (
-          <div key={s.label} className="bg-[#090c0f] px-6 py-5 text-center">
+          <div key={s.label} className="bg-[#07080f] px-6 py-5 text-center">
             <p className="text-2xl font-bold text-white mb-0.5 tabular-nums">
               <CountUp to={s.value} suffix={s.suffix} />
             </p>
@@ -394,7 +394,7 @@ function RatesPreview({ rates }: { rates: Record<string, number> }) {
           }}
         >
           <div>
-            <p className="text-xs text-teal-400 font-medium uppercase tracking-widest mb-2">
+            <p className="text-xs text-blue-400 font-medium uppercase tracking-widest mb-2">
               Live Market Data
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-white">
@@ -414,11 +414,11 @@ function RatesPreview({ rates }: { rates: Record<string, number> }) {
             opacity: inView ? 1 : 0,
             transform: inView ? "translateY(0)" : "translateY(24px)",
             background:
-              "linear-gradient(135deg, rgba(13,17,23,0.95) 0%, rgba(10,14,18,0.98) 100%)",
+              "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
           }}
         >
           {/* Gradient top bar */}
-          <div className="h-px w-full bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-violet-500/0" />
+          <div className="h-px w-full bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
 
           <div className="grid grid-cols-4 px-5 py-3 border-b border-white/[0.05]">
             <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider col-span-2">
@@ -500,7 +500,7 @@ function TopMovers() {
       ref={ref}
       style={{
         background:
-          "linear-gradient(180deg, #090c0f 0%, #0a0e12 50%, #090c0f 100%)",
+          "linear-gradient(180deg, #07080f 0%, #080a14 50%, #07080f 100%)",
       }}
     >
       {/* Side glow */}
@@ -508,14 +508,14 @@ function TopMovers() {
         className="absolute left-0 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%)",
         }}
       />
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-72 h-72 rounded-full pointer-events-none"
         style={{
           background:
-            "radial-gradient(circle, rgba(45,212,191,0.05) 0%, transparent 70%)",
+            "radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)",
         }}
       />
 
@@ -528,7 +528,7 @@ function TopMovers() {
           }}
         >
           <div>
-            <p className="text-xs text-violet-400 font-medium uppercase tracking-widest mb-2">
+            <p className="text-xs text-purple-400 font-medium uppercase tracking-widest mb-2">
               Market Movers
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-white">
@@ -562,7 +562,7 @@ function TopMovers() {
                   className="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 group"
                   style={{
                     background:
-                      "linear-gradient(135deg, rgba(13,17,23,0.9) 0%, rgba(10,14,18,0.95) 100%)",
+                      "linear-gradient(135deg, rgba(10,11,20,0.9) 0%, rgba(8,9,15,0.95) 100%)",
                     opacity: inView ? 1 : 0,
                     transform: inView ? "translateY(0)" : "translateY(20px)",
                     transition: `opacity 0.5s ease ${
@@ -574,7 +574,7 @@ function TopMovers() {
                   <div
                     className={`absolute bottom-0 left-0 h-0.5 transition-all duration-1000 ${
                       up
-                        ? "bg-gradient-to-r from-teal-500/60 to-teal-400/20"
+                        ? "bg-gradient-to-r from-blue-500/60 to-blue-400/20"
                         : "bg-gradient-to-r from-red-500/60 to-red-400/20"
                     }`}
                     style={{
@@ -596,7 +596,7 @@ function TopMovers() {
                   </div>
                   <div
                     className={`flex items-center gap-1 text-sm font-bold font-mono tabular-nums ${
-                      up ? "text-teal-400" : "text-red-400"
+                      up ? "text-blue-400" : "text-red-400"
                     }`}
                   >
                     <span className="text-xs">{up ? "▲" : "▼"}</span>
@@ -628,12 +628,12 @@ function Features() {
             transform: inView ? "translateY(0)" : "translateY(20px)",
           }}
         >
-          <p className="text-xs text-teal-400 font-medium uppercase tracking-widest mb-3">
+          <p className="text-xs text-blue-400 font-medium uppercase tracking-widest mb-3">
             Everything you need
           </p>
           <h2 className="text-3xl sm:text-4xl font-bold text-white max-w-xl mx-auto leading-tight">
             Built for precision,{" "}
-            <span className="bg-gradient-to-r from-teal-400 to-violet-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               designed for speed
             </span>
           </h2>
@@ -646,7 +646,7 @@ function Features() {
               className="relative p-6 rounded-2xl border border-white/[0.06] hover:border-white/[0.12] group cursor-default overflow-hidden transition-all duration-300"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(13,17,23,0.9) 0%, rgba(10,14,18,0.6) 100%)",
+                  "linear-gradient(135deg, rgba(10,11,20,0.9) 0%, rgba(8,9,15,0.6) 100%)",
                 opacity: inView ? 1 : 0,
                 transform: inView ? "translateY(0)" : "translateY(24px)",
                 transition: `opacity 0.6s ease ${
@@ -664,7 +664,7 @@ function Features() {
               >
                 {f.icon}
               </div>
-              <h3 className="relative text-sm font-semibold text-zinc-100 mb-2">
+              <h3 className="relative text-md font-semibold text-zinc-100 mb-2">
                 {f.title}
               </h3>
               <p className="relative text-sm text-zinc-500 leading-relaxed">
@@ -691,16 +691,16 @@ function Ticker({ rates }: { rates: Record<string, number> }) {
       className="py-5 border-y border-white/[0.05] overflow-hidden relative"
       style={{
         background:
-          "linear-gradient(90deg, #090c0f 0%, #0d1117 50%, #090c0f 100%)",
+          "linear-gradient(90deg, #07080f 0%, #0a0b16 50%, #07080f 100%)",
       }}
     >
       <div
         className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(90deg, #090c0f, transparent)" }}
+        style={{ background: "linear-gradient(90deg, #07080f, transparent)" }}
       />
       <div
         className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
-        style={{ background: "linear-gradient(-90deg, #090c0f, transparent)" }}
+        style={{ background: "linear-gradient(-90deg, #07080f, transparent)" }}
       />
 
       <div className="animate-ticker flex gap-8 whitespace-nowrap">
@@ -737,7 +737,7 @@ function Contact() {
 
   const inputClass =
     "w-full px-4 py-3 rounded-xl text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none transition-all border" +
-    " bg-white/[0.03] border-white/[0.08] focus:border-teal-500/40 focus:bg-white/[0.05]";
+    " bg-white/[0.03] border-white/[0.08] focus:border-blue-500/40 focus:bg-white/[0.05]";
 
   return (
     <section
@@ -745,10 +745,10 @@ function Contact() {
       className="py-28 px-4 relative"
       ref={ref}
       style={{
-        background: "linear-gradient(180deg, #090c0f 0%, #0a0e12 100%)",
+        background: "linear-gradient(180deg, #07080f 0%, #080a14 100%)",
       }}
     >
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-violet-500/20 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
 
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -759,12 +759,12 @@ function Contact() {
               transform: inView ? "translateX(0)" : "translateX(-24px)",
             }}
           >
-            <p className="text-xs text-teal-400 font-medium uppercase tracking-widest mb-3">
+            <p className="text-xs text-blue-400 font-medium uppercase tracking-widest mb-3">
               Get in touch
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-5">
               Have a question or{" "}
-              <span className="bg-gradient-to-r from-teal-400 to-violet-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 want API access?
               </span>
             </h2>
@@ -802,18 +802,18 @@ function Contact() {
               opacity: inView ? 1 : 0,
               transform: inView ? "translateX(0)" : "translateX(24px)",
               background:
-                "linear-gradient(135deg, rgba(13,17,23,0.95) 0%, rgba(10,14,18,0.98) 100%)",
+                "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
             }}
           >
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-teal-500/0 via-teal-500/40 to-violet-500/0" />
+            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
 
             {sent ? (
               <div className="flex flex-col items-center justify-center h-64 text-center gap-4">
                 <div
-                  className="w-16 h-16 rounded-full border border-teal-500/30 flex items-center justify-center text-2xl"
+                  className="w-16 h-16 rounded-full border border-blue-500/30 flex items-center justify-center text-2xl"
                   style={{
                     background:
-                      "radial-gradient(circle, rgba(45,212,191,0.12) 0%, transparent 70%)",
+                      "radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%)",
                   }}
                 >
                   ✓
@@ -829,7 +829,7 @@ function Contact() {
                     setSent(false);
                     setForm({ name: "", email: "", message: "" });
                   }}
-                  className="text-xs text-teal-400 hover:text-teal-300 transition-colors mt-2"
+                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors mt-2"
                 >
                   Send another →
                 </button>
@@ -922,10 +922,7 @@ export default function LandingPage() {
   ).length;
 
   return (
-    <div
-      className="min-h-screen bg-[#090c0f] text-zinc-100"
-      style={{ fontFamily: "var(--font-geist-sans)" }}
-    >
+    <div className="min-h-screen bg-[#07080f] text-zinc-100">
       <Hero rateCount={rateCount} />
       <Ticker rates={rates} />
       <RatesPreview rates={rates} />

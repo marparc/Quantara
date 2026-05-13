@@ -44,9 +44,60 @@ const FOOTER_LINKS = [
 
 export function Footer() {
   return (
-    <footer className="relative border-t border-white/[0.06] bg-[#090c0f]">
-      {/* Subtle top glow */}
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-500/30 to-transparent" />
+    <footer className="relative bg-[#07080f]">
+      <style>{`
+        @keyframes shimmerBorder {
+          0%   { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+        .footer-shimmer-line {
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(59,130,246,0) 15%,
+            rgba(99,102,241,0.6) 35%,
+            rgba(168,85,247,0.8) 50%,
+            rgba(99,102,241,0.6) 65%,
+            rgba(59,130,246,0) 85%,
+            transparent 100%
+          );
+          background-size: 200% 100%;
+          animation: shimmerBorder 4s linear infinite;
+        }
+        .footer-logo-wrap {
+          filter: drop-shadow(0 0 8px rgba(99,102,241,0.45));
+          transition: filter 0.3s;
+        }
+        .footer-logo-wrap:hover {
+          filter: drop-shadow(0 0 14px rgba(168,85,247,0.65));
+        }
+        .footer-social-btn {
+          width: 28px;
+          height: 28px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          background: rgba(255,255,255,0.04);
+          border: 0.5px solid rgba(99,102,241,0.2);
+          color: rgba(161,174,211,0.5);
+          transition: color 0.2s, border-color 0.2s, background 0.2s;
+        }
+        .footer-social-btn:hover {
+          color: #a5b4fc;
+          border-color: rgba(99,102,241,0.4);
+          background: rgba(99,102,241,0.08);
+        }
+        .footer-link {
+          font-size: 14px;
+          color: rgba(113,113,122,0.9);
+          transition: color 0.2s;
+        }
+        .footer-link:hover { color: #a5b4fc; }
+      `}</style>
+
+      {/* Shimmer top border — mirrors navbar bottom border */}
+      <div className="footer-shimmer-line h-px w-full" />
 
       <div className="max-w-6xl mx-auto px-4 py-16">
         {/* Top row: brand + links */}
@@ -54,18 +105,43 @@ export function Footer() {
           {/* Brand column */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5 mb-4 group">
-              <Image
-                src="/logo.png"
-                alt="Quantara logo"
-                width={28}
-                height={28}
-                className="w-7 h-7"
-              />
+              <div className="relative flex-shrink-0 footer-logo-wrap">
+                {/* Radial halo — same as navbar */}
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    background:
+                      "radial-gradient(circle, rgba(99,102,241,0.28) 0%, transparent 70%)",
+                    transform: "scale(1.7)",
+                  }}
+                />
+                <Image
+                  src="/logo.png"
+                  alt="Quantara logo"
+                  width={28}
+                  height={28}
+                  className="relative w-7 h-7"
+                />
+              </div>
 
-              <span className="text-sm font-semibold text-zinc-200 group-hover:text-white transition-colors">
+              {/* Wordmark — gem gradient, same as navbar */}
+              <span
+                style={{
+                  fontFamily: "var(--font-orbitron)",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  letterSpacing: "-0.01em",
+                  background:
+                    "linear-gradient(90deg, #c7d2fe 0%, #a78bfa 50%, #c084fc 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
                 Quantara
               </span>
             </Link>
+
             <p className="text-xs text-zinc-500 leading-relaxed max-w-[180px]">
               Real-time currency intelligence for traders, developers, and
               businesses worldwide.
@@ -87,7 +163,7 @@ export function Footer() {
                   key={s.label}
                   href="#"
                   aria-label={s.label}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-white/[0.04] border border-white/[0.07] text-zinc-500 hover:text-teal-400 hover:border-teal-500/30 transition-all"
+                  className="footer-social-btn"
                 >
                   <svg
                     className="w-3.5 h-3.5"
@@ -110,10 +186,7 @@ export function Footer() {
               <ul className="space-y-2.5">
                 {col.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-zinc-500 hover:text-teal-400 transition-colors"
-                    >
+                    <Link href={link.href} className="footer-link">
                       {link.label}
                     </Link>
                   </li>

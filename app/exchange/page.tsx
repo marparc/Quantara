@@ -187,11 +187,8 @@ function CurrencyFlag({
 }) {
   const url = getFlagUrl(code);
   const { name } = getCurrencyInfo(code);
-
-  if (!url) {
+  if (!url)
     return <span className={`text-xl leading-none ${className}`}>🌐</span>;
-  }
-
   return (
     <img
       src={url}
@@ -200,7 +197,6 @@ function CurrencyFlag({
       height={24}
       className={`object-cover flex-shrink-0 ${className}`}
       onError={(e) => {
-        // Fallback to globe emoji if image fails
         const target = e.currentTarget;
         target.style.display = "none";
         const span = document.createElement("span");
@@ -240,8 +236,8 @@ function Spinner() {
   return (
     <div className="flex items-center justify-center py-24">
       <div className="relative h-10 w-10">
-        <div className="absolute inset-0 rounded-full border-2 border-teal-300/20" />
-        <div className="absolute inset-0 rounded-full border-t-2 border-teal-400 animate-spin" />
+        <div className="absolute inset-0 rounded-full border-2 border-blue-400/20" />
+        <div className="absolute inset-0 rounded-full border-t-2 border-blue-400 animate-spin" />
       </div>
     </div>
   );
@@ -265,15 +261,148 @@ function SortIcon({ active, dir }: { active: boolean; dir: "asc" | "desc" }) {
     >
       <span
         className={`block w-0 h-0 border-l-[3px] border-r-[3px] border-b-[4px] border-transparent ${
-          active && dir === "asc" ? "border-b-teal-400" : "border-b-zinc-400"
+          active && dir === "asc" ? "border-b-blue-400" : "border-b-zinc-400"
         }`}
       />
       <span
         className={`block w-0 h-0 border-l-[3px] border-r-[3px] border-t-[4px] border-transparent ${
-          active && dir === "desc" ? "border-t-teal-400" : "border-t-zinc-400"
+          active && dir === "desc" ? "border-t-blue-400" : "border-t-zinc-400"
         }`}
       />
     </span>
+  );
+}
+
+// ─── Section header ───────────────────────────────────────────────────────────
+function SectionHeader({
+  eyebrow,
+  title,
+  accent = "blue",
+}: {
+  eyebrow: string;
+  title: React.ReactNode;
+  accent?: "blue" | "purple";
+}) {
+  return (
+    <div className="mb-8">
+      <p
+        className={`text-xs font-medium uppercase tracking-widest mb-2 ${
+          accent === "blue" ? "text-blue-400" : "text-purple-400"
+        }`}
+      >
+        {eyebrow}
+      </p>
+      <h2 className="text-2xl sm:text-3xl font-bold text-white">{title}</h2>
+    </div>
+  );
+}
+
+// ─── Glass card wrapper ───────────────────────────────────────────────────────
+function GlassCard({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`rounded-2xl border border-white/[0.07] overflow-hidden ${className}`}
+      style={{
+        background:
+          "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
+      }}
+    >
+      <div className="h-px w-full bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
+      {children}
+    </div>
+  );
+}
+
+// ─── Primary button ───────────────────────────────────────────────────────────
+function PrimaryButton({
+  children,
+  onClick,
+  disabled,
+  type = "button",
+  className = "",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: "button" | "submit";
+  className?: string;
+}) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`px-5 py-2.5 rounded-xl text-white text-sm font-semibold transition-all hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed ${className}`}
+      style={{
+        background:
+          "linear-gradient(135deg, #3b82f6 0%, #7c3aed 60%, #a855f7 100%)",
+      }}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── Ghost button ────────────────────────────────────────────────────────────
+function GhostButton({
+  children,
+  onClick,
+  className = "",
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-4 py-2 rounded-xl text-sm font-medium text-zinc-400 border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] hover:text-zinc-200 hover:border-white/[0.12] transition-all ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+// ─── Label ────────────────────────────────────────────────────────────────────
+function FieldLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <label className="text-xs text-zinc-500 uppercase tracking-widest mb-1.5 block">
+      {children}
+    </label>
+  );
+}
+
+// ─── Input ────────────────────────────────────────────────────────────────────
+const inputClass =
+  "w-full px-4 py-2.5 rounded-xl text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none transition-all border bg-white/[0.03] border-white/[0.08] focus:border-blue-500/40 focus:bg-white/[0.05]";
+const dateInputClass =
+  "px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-blue-500/40 transition-all font-mono";
+const selectClass =
+  "px-3 py-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-blue-500/40 transition-all appearance-none cursor-pointer";
+
+// ─── Status pill ─────────────────────────────────────────────────────────────
+function StatusPill({
+  color,
+  children,
+}: {
+  color: "blue" | "purple";
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
+      <span
+        className={`w-1.5 h-1.5 rounded-full ${
+          color === "blue" ? "bg-blue-400" : "bg-purple-400"
+        }`}
+      />
+      {children}
+    </div>
   );
 }
 
@@ -321,7 +450,6 @@ function DashboardListView({
     fetchChange(daysAgoStr(activePeriod.days), todayStr());
   }, [activePeriod]);
 
-  // Build change map
   const changeMap = useMemo(() => {
     const m: Record<
       string,
@@ -337,13 +465,10 @@ function DashboardListView({
     return m;
   }, [topMovers]);
 
-  // Build rows
   const rows: ListRow[] = useMemo(() => {
     const pool = PINNED_CURRENCIES.filter((c) => allCodes.includes(c));
-    // add remaining codes not in pinned
     const rest = allCodes.filter((c) => !pool.includes(c));
     const all = [...pool, ...rest];
-
     return all
       .map((code, idx) => {
         const key = `USD${code}`;
@@ -365,7 +490,6 @@ function DashboardListView({
       .filter(Boolean) as ListRow[];
   }, [rates, allCodes, changeMap]);
 
-  // Filter + sort
   const filtered = useMemo(() => {
     const q = search.trim().toUpperCase();
     let r = q
@@ -373,7 +497,6 @@ function DashboardListView({
           (row) => row.code.includes(q) || row.name.toUpperCase().includes(q)
         )
       : rows;
-
     r = [...r].sort((a, b) => {
       let av: number, bv: number;
       if (sortKey === "rank") {
@@ -404,9 +527,21 @@ function DashboardListView({
 
   return (
     <section>
-      {/* Controls row */}
+      <SectionHeader
+        eyebrow="Live Market Data"
+        title={
+          <>
+            USD exchange{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              rates
+            </span>
+          </>
+        }
+        accent="blue"
+      />
+
+      {/* Controls */}
       <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
-        {/* Search */}
         <div className="relative flex-1 min-w-[200px] max-w-xs">
           <svg
             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none"
@@ -429,7 +564,7 @@ function DashboardListView({
               setPage(1);
             }}
             placeholder="Search currency…"
-            className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07] text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-teal-500/40 transition-all"
+            className="w-full pl-9 pr-8 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07] text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-blue-500/40 transition-all"
           />
           {search && (
             <button
@@ -440,8 +575,6 @@ function DashboardListView({
             </button>
           )}
         </div>
-
-        {/* Period filter */}
         <div className="flex items-center gap-2">
           <span className="text-xs text-zinc-600 uppercase tracking-widest hidden sm:block">
             Change
@@ -456,23 +589,28 @@ function DashboardListView({
                 }}
                 className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
                   activePeriod.label === p.label
-                    ? "bg-gradient-to-r from-teal-500 to-violet-600 text-white"
+                    ? "text-white"
                     : "text-zinc-400 hover:text-zinc-200"
                 }`}
+                style={
+                  activePeriod.label === p.label
+                    ? {
+                        background: "linear-gradient(135deg, #3b82f6, #7c3aed)",
+                      }
+                    : {}
+                }
               >
                 {p.label}
               </button>
             ))}
           </div>
           {changeLoading && (
-            <div className="w-4 h-4 rounded-full border-t border-teal-400 animate-spin" />
+            <div className="w-4 h-4 rounded-full border-t border-blue-400 animate-spin" />
           )}
         </div>
       </div>
 
-      {/* Table */}
-      <div className="rounded-2xl border border-white/[0.06] bg-[#0d1117]/80 overflow-hidden">
-        {/* Table header */}
+      <GlassCard>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px]">
             <thead>
@@ -523,45 +661,36 @@ function DashboardListView({
                     key={row.code}
                     className="hover:bg-white/[0.03] transition-colors duration-150 group"
                   >
-                    {/* Rank */}
-                    <td className="px-4 py-3 text-sm text-zinc-600 mono tabular-nums">
+                    <td className="px-4 py-3 text-sm text-zinc-600 font-mono tabular-nums">
                       {row.rank}
                     </td>
-
-                    {/* Currency */}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
                         <CurrencyFlag code={row.code} />
                         <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-semibold text-zinc-100">
-                              {row.code}
-                            </span>
-                          </div>
+                          <span className="text-sm font-semibold text-zinc-100">
+                            {row.code}
+                          </span>
                           <span className="text-xs text-zinc-500 truncate block max-w-[140px]">
                             {row.name}
                           </span>
                         </div>
                       </div>
                     </td>
-
-                    {/* Rate */}
                     <td className="px-4 py-3 text-right">
-                      <span className="text-sm font-medium text-zinc-100 mono tabular-nums">
+                      <span className="text-sm font-medium text-zinc-100 font-mono tabular-nums">
                         {formatRate(row.rate)}
                       </span>
                     </td>
-
-                    {/* Change % */}
                     <td className="px-4 py-3 text-right">
                       {row.change_pct !== null ? (
                         <span
-                          className={`inline-flex items-center gap-1 text-sm font-semibold mono tabular-nums px-2 py-0.5 rounded-md ${
+                          className={`inline-flex items-center gap-1 text-sm font-semibold font-mono tabular-nums px-2 py-0.5 rounded-md ${
                             isPos
                               ? "text-emerald-400 bg-emerald-400/10"
                               : isNeg
                               ? "text-red-400 bg-red-400/10"
-                              : "text-zinc-400 bg-[#0d1117]"
+                              : "text-zinc-400 bg-white/[0.04]"
                           }`}
                         >
                           {isPos && "▲"}
@@ -570,22 +699,20 @@ function DashboardListView({
                           {row.change_pct.toFixed(4)}%
                         </span>
                       ) : (
-                        <span className="text-zinc-700 text-sm mono">—</span>
+                        <span className="text-zinc-700 text-sm font-mono">
+                          —
+                        </span>
                       )}
                     </td>
-
-                    {/* Start Rate */}
                     <td className="px-4 py-3 text-right hidden md:table-cell">
-                      <span className="text-xs text-zinc-500 mono tabular-nums">
+                      <span className="text-xs text-zinc-500 font-mono tabular-nums">
                         {row.start_rate !== null
                           ? formatRate(row.start_rate)
                           : "—"}
                       </span>
                     </td>
-
-                    {/* End Rate */}
                     <td className="px-4 py-3 text-right hidden md:table-cell">
-                      <span className="text-xs text-zinc-400 mono tabular-nums">
+                      <span className="text-xs text-zinc-400 font-mono tabular-nums">
                         {row.end_rate !== null ? formatRate(row.end_rate) : "—"}
                       </span>
                     </td>
@@ -595,27 +722,25 @@ function DashboardListView({
             </tbody>
           </table>
         </div>
-
-        {/* Footer */}
         <div className="px-5 py-3 border-t border-white/[0.06] flex items-center justify-between">
-          <span className="text-xs text-zinc-600 mono">
+          <span className="text-xs text-zinc-600 font-mono">
             {filtered.length} currencies · showing {paginated.length}
           </span>
           {hasMore && (
             <button
               onClick={() => setPage((p) => p + 1)}
-              className="text-xs text-teal-400 hover:text-teal-300 transition-colors font-medium"
+              className="text-xs text-blue-400 hover:text-blue-300 transition-colors font-medium"
             >
               Show more ↓
             </button>
           )}
         </div>
-      </div>
+      </GlassCard>
     </section>
   );
 }
 
-// ─── RateCard (kept for other tabs) ───────────────────────────────────────────
+// ─── RateCard ─────────────────────────────────────────────────────────────────
 interface RateCardProps {
   code: string;
   rate: number;
@@ -631,22 +756,27 @@ function RateCard({
 }: RateCardProps) {
   const { name } = getCurrencyInfo(code);
   const isBase = code === fromCurrency;
-
   return (
     <div
-      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-teal-900/20 ${
+      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-blue-900/20 ${
         isBase
-          ? "border-teal-500/30 bg-teal-500/5"
-          : "border-white/[0.06] bg-[#0d1117]/70 hover:border-teal-500/30"
+          ? "border-blue-500/30 bg-blue-500/5"
+          : "border-white/[0.06] hover:border-blue-500/20"
       }`}
+      style={{
+        background: isBase
+          ? undefined
+          : "linear-gradient(135deg, rgba(10,11,20,0.9) 0%, rgba(8,9,15,0.6) 100%)",
+      }}
     >
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-blue-500/10 to-purple-500/5 pointer-events-none" />
       <div className="p-4">
         <div className="flex items-start justify-between mb-3">
           <CurrencyFlag code={code} />
           <span
             className={`text-xs font-mono font-semibold px-2 py-0.5 rounded-full ${
               isBase
-                ? "bg-teal-500/15 text-teal-300"
+                ? "bg-blue-500/15 text-blue-300"
                 : "bg-white/[0.05] text-zinc-400"
             }`}
           >
@@ -658,7 +788,7 @@ function RateCard({
           {formatRate(rate)}
         </p>
         {convertedAmount !== null && (
-          <p className="text-sm font-mono text-teal-400/80 mt-1 tabular-nums">
+          <p className="text-sm font-mono text-blue-400/80 mt-1 tabular-nums">
             ={" "}
             {convertedAmount.toLocaleString("en-US", {
               maximumFractionDigits: 4,
@@ -691,39 +821,47 @@ function HistoricalTab({ allCodes }: { allCodes: string[] }) {
 
   return (
     <section className="space-y-6">
+      <SectionHeader
+        eyebrow="Historical Data"
+        title={
+          <>
+            Rates on a{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              specific date
+            </span>
+          </>
+        }
+        accent="purple"
+      />
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-zinc-500 uppercase tracking-widest">
-            Date
-          </label>
+          <FieldLabel>Date</FieldLabel>
           <input
             type="date"
             value={date}
             max={daysAgoStr(1)}
             onChange={(e) => setDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
+            className={dateInputClass}
           />
         </div>
-        <button
+        <PrimaryButton
           onClick={() => fetchHistorical(date)}
           disabled={isLoading || !date}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Loading…" : "Fetch Rates"}
-        </button>
+        </PrimaryButton>
       </div>
-
       {error && <ErrorBanner message={error} />}
-
       {data && (
         <>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+          <StatusPill color="blue">
             Historical rates for{" "}
-            <span className="text-zinc-200 font-medium mono">{data.date}</span>
-            <span className="text-zinc-600">·</span>
-            <span className="mono">Base: {data.source}</span>
-          </div>
+            <span className="text-zinc-200 font-medium font-mono ml-1">
+              {data.date}
+            </span>
+            <span className="text-zinc-600 mx-1">·</span>
+            <span className="font-mono">Base: {data.source}</span>
+          </StatusPill>
           <div className="relative">
             <svg
               className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500 pointer-events-none"
@@ -743,7 +881,7 @@ function HistoricalTab({ allCodes }: { allCodes: string[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search currency…"
-              className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07] text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-teal-500/40 transition-all"
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.07] text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-blue-500/40 transition-all"
             />
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -763,7 +901,6 @@ function HistoricalTab({ allCodes }: { allCodes: string[] }) {
           </div>
         </>
       )}
-
       {!data && !isLoading && (
         <p className="text-zinc-600 text-sm">
           Pick a date and press{" "}
@@ -793,132 +930,137 @@ function ConvertTab({ allCodes }: { allCodes: string[] }) {
   };
 
   return (
-    <section className="max-w-lg mx-auto space-y-5">
-      <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6 space-y-5">
-        <div>
-          <label className="text-xs text-zinc-500 uppercase tracking-widest mb-2 block">
-            Amount
-          </label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            min="0"
-            step="any"
-            className="w-full px-4 py-3 rounded-xl bg-[#0a0e12] border border-white/[0.08] text-xl font-medium mono text-zinc-100 focus:outline-none focus:border-teal-500/40 transition-all"
-            placeholder="0.00"
-          />
-        </div>
-
-        <div className="flex items-center gap-3">
-          <div className="flex-1">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest mb-2 block">
-              From
-            </label>
-            <select
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-[#0a0e12] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all appearance-none cursor-pointer"
-            >
-              {["USD", ...allCodes].map((c) => (
-                <option key={c} value={c}>
-                  {c} — {getCurrencyInfo(c).name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <button
-            onClick={handleSwap}
-            className="mt-6 p-2.5 rounded-xl bg-white/[0.04] hover:bg-violet-500/20 border border-white/[0.07] hover:border-violet-500/40 text-zinc-400 hover:text-violet-400 transition-all duration-200"
-          >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+    <section>
+      <SectionHeader
+        eyebrow="Currency Converter"
+        title={
+          <>
+            Convert at{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              live rates
+            </span>
+          </>
+        }
+        accent="blue"
+      />
+      <div className="max-w-lg mx-auto space-y-5">
+        <GlassCard>
+          <div className="p-6 space-y-5">
+            <div>
+              <FieldLabel>Amount</FieldLabel>
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                min="0"
+                step="any"
+                className="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xl font-medium font-mono text-zinc-100 focus:outline-none focus:border-blue-500/40 transition-all"
+                placeholder="0.00"
               />
-            </svg>
-          </button>
-          <div className="flex-1">
-            <label className="text-xs text-zinc-500 uppercase tracking-widest mb-2 block">
-              To
-            </label>
-            <select
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="w-full px-4 py-3 rounded-xl bg-[#0a0e12] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all appearance-none cursor-pointer"
-            >
-              {["USD", ...allCodes].map((c) => (
-                <option key={c} value={c}>
-                  {c} — {getCurrencyInfo(c).name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        <button
-          onClick={handleConvert}
-          disabled={isLoading}
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white font-semibold text-sm hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-        >
-          {isLoading ? "Converting…" : "Convert via API"}
-        </button>
-
-        {error && <ErrorBanner message={error} />}
-
-        {data && result !== null && (
-          <div className="rounded-xl bg-[#0a0e12]/80 border border-white/[0.05] p-5">
-            <p className="text-xs text-zinc-600 uppercase tracking-widest mb-3">
-              Result
-            </p>
-            <div className="flex items-baseline gap-2 flex-wrap">
-              <span className="text-4xl font-semibold mono text-teal-300 tabular-nums">
-                {result.toLocaleString("en-US", {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 4,
-                })}
-              </span>
-              <span className="text-xl text-zinc-400">{data.query.to}</span>
             </div>
-            {rate !== null && (
-              <p className="text-xs text-zinc-600 mt-3 mono">
-                1 {data.query.from} = {formatRate(rate)} {data.query.to}
-              </p>
-            )}
-            <p className="text-xs text-zinc-700 mt-1 mono">
-              {data.query.amount.toLocaleString()} {data.query.from} converted
-              at live rate
-            </p>
-          </div>
-        )}
-
-        <div>
-          <p className="text-xs text-zinc-600 uppercase tracking-widest mb-2">
-            Quick amounts
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {[1, 10, 100, 500, 1000, 10000].map((q) => (
+            <div className="flex items-center gap-3">
+              <div className="flex-1">
+                <FieldLabel>From</FieldLabel>
+                <select
+                  value={from}
+                  onChange={(e) => setFrom(e.target.value)}
+                  className={`w-full ${selectClass}`}
+                >
+                  {["USD", ...allCodes].map((c) => (
+                    <option key={c} value={c}>
+                      {c} — {getCurrencyInfo(c).name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <button
-                key={q}
-                onClick={() => setAmount(String(q))}
-                className={`px-3 py-1.5 rounded-lg text-xs mono transition-all ${
-                  parseFloat(amount) === q
-                    ? "bg-teal-500/15 text-teal-300 border border-violet-500/40"
-                    : "bg-[#0d1117] text-zinc-500 border border-white/[0.08] hover:text-zinc-300 hover:border-zinc-600"
-                }`}
+                onClick={handleSwap}
+                className="mt-6 p-2.5 rounded-xl bg-white/[0.04] hover:bg-purple-500/20 border border-white/[0.07] hover:border-purple-500/40 text-zinc-400 hover:text-purple-400 transition-all duration-200"
               >
-                {q.toLocaleString()}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                  />
+                </svg>
               </button>
-            ))}
+              <div className="flex-1">
+                <FieldLabel>To</FieldLabel>
+                <select
+                  value={to}
+                  onChange={(e) => setTo(e.target.value)}
+                  className={`w-full ${selectClass}`}
+                >
+                  {["USD", ...allCodes].map((c) => (
+                    <option key={c} value={c}>
+                      {c} — {getCurrencyInfo(c).name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <PrimaryButton
+              onClick={handleConvert}
+              disabled={isLoading}
+              className="w-full justify-center"
+            >
+              {isLoading ? "Converting…" : "Convert via API"}
+            </PrimaryButton>
+            {error && <ErrorBanner message={error} />}
+            {data && result !== null && (
+              <div className="rounded-xl bg-white/[0.03] border border-white/[0.06] p-5">
+                <p className="text-xs text-zinc-600 uppercase tracking-widest mb-3">
+                  Result
+                </p>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-4xl font-semibold font-mono text-blue-300 tabular-nums">
+                    {result.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 4,
+                    })}
+                  </span>
+                  <span className="text-xl text-zinc-400">{data.query.to}</span>
+                </div>
+                {rate !== null && (
+                  <p className="text-xs text-zinc-600 mt-3 font-mono">
+                    1 {data.query.from} = {formatRate(rate)} {data.query.to}
+                  </p>
+                )}
+                <p className="text-xs text-zinc-700 mt-1 font-mono">
+                  {data.query.amount.toLocaleString()} {data.query.from}{" "}
+                  converted at live rate
+                </p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-zinc-600 uppercase tracking-widest mb-2">
+                Quick amounts
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[1, 10, 100, 500, 1000, 10000].map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => setAmount(String(q))}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all border ${
+                      parseFloat(amount) === q
+                        ? "text-blue-300 border-blue-500/40 bg-blue-500/10"
+                        : "bg-white/[0.03] text-zinc-500 border-white/[0.08] hover:text-zinc-300 hover:border-zinc-600"
+                    }`}
+                  >
+                    {q.toLocaleString()}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
+        </GlassCard>
       </div>
     </section>
   );
@@ -942,37 +1084,43 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
 
   return (
     <section className="space-y-6">
+      <SectionHeader
+        eyebrow="Rate History"
+        title={
+          <>
+            Day-by-day{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              timeframe
+            </span>
+          </>
+        }
+        accent="purple"
+      />
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-zinc-500 uppercase tracking-widest">
-            Start Date
-          </label>
+          <FieldLabel>Start Date</FieldLabel>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
+            className={dateInputClass}
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-zinc-500 uppercase tracking-widest">
-            End Date
-          </label>
+          <FieldLabel>End Date</FieldLabel>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
+            className={dateInputClass}
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-zinc-500 uppercase tracking-widest">
-            Currency (vs USD)
-          </label>
+          <FieldLabel>Currency (vs USD)</FieldLabel>
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all appearance-none cursor-pointer"
+            className={selectClass}
           >
             {allCodes.map((c) => (
               <option key={c} value={c}>
@@ -981,64 +1129,81 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
             ))}
           </select>
         </div>
-        <button
+        <PrimaryButton
           onClick={() => fetchTimeframe(startDate, endDate)}
           disabled={isLoading}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Loading…" : "Fetch Timeframe"}
-        </button>
+        </PrimaryButton>
       </div>
-
       {error && <ErrorBanner message={error} />}
-
       {data && (
         <>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-            <span className="mono">
+          <StatusPill color="purple">
+            <span className="font-mono">
               {data.start_date} → {data.end_date}
             </span>
-            <span className="text-zinc-600">·</span>
-            <span className="mono">{dates.length} days</span>
-          </div>
-
+            <span className="text-zinc-600 mx-1">·</span>
+            <span className="font-mono">{dates.length} days</span>
+          </StatusPill>
           {series.length > 1 && (
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] p-5">
-              <p className="text-xs text-zinc-500 uppercase tracking-widest mb-4">
-                USD → {currency} rate over time
-              </p>
-              <div className="relative">
-                <svg
-                  viewBox="0 0 600 160"
-                  className="w-full h-40 overflow-visible"
-                  preserveAspectRatio="none"
-                >
-                  {[0, 0.25, 0.5, 0.75, 1].map((t) => (
-                    <line
-                      key={t}
-                      x1="0"
-                      y1={t * 160}
-                      x2="600"
-                      y2={t * 160}
-                      stroke="rgba(255,255,255,0.04)"
-                      strokeWidth="1"
-                    />
-                  ))}
-                  <defs>
-                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop
-                        offset="0%"
-                        stopColor="#2dd4bf"
-                        stopOpacity="0.15"
+            <GlassCard>
+              <div className="p-5">
+                <p className="text-xs text-zinc-500 uppercase tracking-widest mb-4">
+                  USD → {currency} rate over time
+                </p>
+                <div className="relative">
+                  <svg
+                    viewBox="0 0 600 160"
+                    className="w-full h-40 overflow-visible"
+                    preserveAspectRatio="none"
+                  >
+                    {[0, 0.25, 0.5, 0.75, 1].map((t) => (
+                      <line
+                        key={t}
+                        x1="0"
+                        y1={t * 160}
+                        x2="600"
+                        y2={t * 160}
+                        stroke="rgba(255,255,255,0.04)"
+                        strokeWidth="1"
                       />
-                      <stop offset="100%" stopColor="#2dd4bf" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <polygon
-                    points={[
-                      ...series.map(
-                        (p: { date: string; rate: number }, i: number) => {
+                    ))}
+                    <defs>
+                      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop
+                          offset="0%"
+                          stopColor="#60a5fa"
+                          stopOpacity="0.18"
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor="#60a5fa"
+                          stopOpacity="0"
+                        />
+                      </linearGradient>
+                    </defs>
+                    <polygon
+                      points={[
+                        ...series.map(
+                          (p: { date: string; rate: number }, i: number) => {
+                            const x = (i / (series.length - 1)) * 600;
+                            const y =
+                              160 -
+                              ((p.rate - minRate) / (maxRate - minRate || 1)) *
+                                140 -
+                              10;
+                            return `${x},${y}`;
+                          }
+                        ),
+                        `600,160`,
+                        `0,160`,
+                      ].join(" ")}
+                      fill="url(#areaGrad)"
+                    />
+                    <polyline
+                      points={series
+                        .map((p: { date: string; rate: number }, i: number) => {
                           const x = (i / (series.length - 1)) * 600;
                           const y =
                             160 -
@@ -1046,45 +1211,28 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
                               140 -
                             10;
                           return `${x},${y}`;
-                        }
-                      ),
-                      `600,160`,
-                      `0,160`,
-                    ].join(" ")}
-                    fill="url(#areaGrad)"
-                  />
-                  <polyline
-                    points={series
-                      .map((p: { date: string; rate: number }, i: number) => {
-                        const x = (i / (series.length - 1)) * 600;
-                        const y =
-                          160 -
-                          ((p.rate - minRate) / (maxRate - minRate || 1)) *
-                            140 -
-                          10;
-                        return `${x},${y}`;
-                      })
-                      .join(" ")}
-                    fill="none"
-                    stroke="#2dd4bf"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <div className="flex justify-between mt-2 text-xs text-zinc-600 mono">
-                  <span>{series[0]?.date}</span>
-                  <span>{series[series.length - 1]?.date}</span>
-                </div>
-                <div className="flex justify-between text-xs text-zinc-500 mono mt-1">
-                  <span>Min: {formatRate(minRate)}</span>
-                  <span>Max: {formatRate(maxRate)}</span>
+                        })
+                        .join(" ")}
+                      fill="none"
+                      stroke="#60a5fa"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <div className="flex justify-between mt-2 text-xs text-zinc-600 font-mono">
+                    <span>{series[0]?.date}</span>
+                    <span>{series[series.length - 1]?.date}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-zinc-500 font-mono mt-1">
+                    <span>Min: {formatRate(minRate)}</span>
+                    <span>Max: {formatRate(maxRate)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </GlassCard>
           )}
-
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] overflow-hidden">
+          <GlassCard>
             <div className="px-5 py-3 border-b border-white/[0.06]">
               <p className="text-xs text-zinc-500 uppercase tracking-widest">
                 Daily rates — USD → {currency}
@@ -1096,17 +1244,18 @@ function TimeframeTab({ allCodes }: { allCodes: string[] }) {
                   key={p.date}
                   className="flex items-center justify-between px-5 py-3 hover:bg-white/[0.03] transition-colors"
                 >
-                  <span className="text-sm text-zinc-400 mono">{p.date}</span>
-                  <span className="text-sm font-medium text-zinc-100 mono tabular-nums">
+                  <span className="text-sm text-zinc-400 font-mono">
+                    {p.date}
+                  </span>
+                  <span className="text-sm font-medium text-zinc-100 font-mono tabular-nums">
                     {formatRate(p.rate)} {currency}
                   </span>
                 </div>
               ))}
             </div>
-          </div>
+          </GlassCard>
         </>
       )}
-
       {!data && !isLoading && (
         <p className="text-zinc-600 text-sm">
           Select a date range and press{" "}
@@ -1129,60 +1278,63 @@ function ChangeTab() {
 
   return (
     <section className="space-y-6">
+      <SectionHeader
+        eyebrow="Market Movers"
+        title={
+          <>
+            Currency{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              change analysis
+            </span>
+          </>
+        }
+        accent="purple"
+      />
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-zinc-500 uppercase tracking-widest">
-            Start Date
-          </label>
+          <FieldLabel>Start Date</FieldLabel>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
+            className={dateInputClass}
           />
         </div>
         <div className="flex flex-col gap-1.5">
-          <label className="text-xs text-zinc-500 uppercase tracking-widest">
-            End Date
-          </label>
+          <FieldLabel>End Date</FieldLabel>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-3 py-2.5 rounded-xl bg-[#0d1117] border border-white/[0.08] text-sm text-zinc-200 focus:outline-none focus:border-teal-500/40 transition-all font-mono"
+            className={dateInputClass}
           />
         </div>
-        <button
+        <PrimaryButton
           onClick={() => fetchChange(startDate, endDate)}
           disabled={isLoading}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-teal-500 to-violet-600 text-white text-sm font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
         >
           {isLoading ? "Loading…" : "Fetch Changes"}
-        </button>
+        </PrimaryButton>
       </div>
-
       {error && <ErrorBanner message={error} />}
-
       {data && (
         <>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.06] text-xs text-zinc-400">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal-400" />
+          <StatusPill color="blue">
             Change from{" "}
-            <span className="text-zinc-200 font-medium mono">
+            <span className="text-zinc-200 font-medium font-mono ml-1">
               {data.start_date}
-            </span>{" "}
-            to{" "}
-            <span className="text-zinc-200 font-medium mono">
+            </span>
+            <span className="mx-1">to</span>
+            <span className="text-zinc-200 font-medium font-mono">
               {data.end_date}
             </span>
-          </div>
-
-          <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] overflow-hidden">
+          </StatusPill>
+          <GlassCard>
             <div className="px-5 py-3 border-b border-white/[0.06] flex items-center justify-between">
               <p className="text-xs text-zinc-500 uppercase tracking-widest">
                 Top movers (by % change vs USD)
               </p>
-              <span className="text-xs text-zinc-600 mono">
+              <span className="text-xs text-zinc-600 font-mono">
                 {topMovers.length} currencies
               </span>
             </div>
@@ -1200,7 +1352,7 @@ function ChangeTab() {
                       <div className="flex items-center gap-2.5">
                         <CurrencyFlag code={m.code} />
                         <div>
-                          <span className="text-sm font-semibold text-zinc-200 mono">
+                          <span className="text-sm font-semibold text-zinc-200 font-mono">
                             {m.code}
                           </span>
                           <span className="text-xs text-zinc-600 ml-2">
@@ -1210,22 +1362,24 @@ function ChangeTab() {
                       </div>
                       <div className="text-right">
                         <span
-                          className={`text-sm font-semibold mono tabular-nums ${
-                            isPositive ? "text-emerald-400" : "text-red-400"
+                          className={`text-sm font-semibold font-mono tabular-nums ${
+                            isPositive ? "text-blue-400" : "text-red-400"
                           }`}
                         >
                           {isPositive ? "+" : ""}
                           {m.change_pct.toFixed(4)}%
                         </span>
-                        <p className="text-xs text-zinc-600 mono">
+                        <p className="text-xs text-zinc-600 font-mono">
                           {formatRate(m.start_rate)} → {formatRate(m.end_rate)}
                         </p>
                       </div>
                     </div>
-                    <div className="h-1 rounded-full bg-violet-900/40 overflow-hidden">
+                    <div className="h-0.5 rounded-full bg-white/[0.04] overflow-hidden">
                       <div
                         className={`h-full rounded-full ${
-                          isPositive ? "bg-teal-500/60" : "bg-red-500/60"
+                          isPositive
+                            ? "bg-gradient-to-r from-blue-500/60 to-blue-400/20"
+                            : "bg-gradient-to-r from-red-500/60 to-red-400/20"
                         }`}
                         style={{ width: `${barWidth}%` }}
                       />
@@ -1234,21 +1388,19 @@ function ChangeTab() {
                 );
               })}
             </div>
-          </div>
-
+          </GlassCard>
           {topMovers.length > 20 && (
-            <button
+            <GhostButton
               onClick={() => setShowAll((v) => !v)}
-              className="w-full py-2.5 rounded-xl border border-white/[0.08] text-sm text-zinc-400 hover:text-zinc-200 hover:border-zinc-600 transition-all"
+              className="w-full justify-center"
             >
               {showAll
                 ? "Show fewer"
                 : `Show all ${topMovers.length} currencies`}
-            </button>
+            </GhostButton>
           )}
         </>
       )}
-
       {!data && !isLoading && (
         <p className="text-zinc-600 text-sm">
           Select a date range and press{" "}
@@ -1261,17 +1413,9 @@ function ChangeTab() {
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
-type TabId =
-  | "dashboard"
-  | "historical"
-  | "convert-api"
-  | "timeframe"
-  | "change";
-
 export default function ExchangeRatePage() {
   const { data, rates, isLoading, error, lastUpdated, refetch } =
     useExchangeRates();
-  const [activeTab, setActiveTab] = useState<TabId>("dashboard");
 
   const allCodes = useMemo(() => {
     return Object.keys(rates)
@@ -1279,56 +1423,69 @@ export default function ExchangeRatePage() {
       .filter((code) => code.length === 3 && !/^\d/.test(code));
   }, [rates]);
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: "dashboard", label: "📊 Rates" },
-    { id: "historical", label: "🗓 Historical" },
-    { id: "convert-api", label: "⚡ Convert" },
-    { id: "timeframe", label: "📈 Timeframe" },
-    { id: "change", label: "📉 Change" },
-  ];
-
   return (
-    <div
-      className="min-h-screen bg-[#090c0f] text-zinc-100"
-      style={{ fontFamily: "'DM Sans', sans-serif" }}
-    >
+    <div className="min-h-screen bg-[#07080f] text-zinc-100">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
-        * { font-family: 'DM Sans', sans-serif; }
-        .mono { font-family: 'DM Mono', monospace; }
-        tbody tr { cursor: default; }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(16px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes gridPan {
+          from { background-position: 0 0; }
+          to   { background-position: 40px 40px; }
+        }
+        .page-fade { animation: fadeUp 0.5s ease both; }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
       `}</style>
 
-      {/* Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(20,184,166,0.07),transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_40%_at_80%_60%,rgba(139,92,246,0.06),transparent)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_30%_20%_at_20%_80%,rgba(20,184,166,0.04),transparent)]" />
+      {/* Ambient background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        {/* Animated grid */}
+        <div
+          className="absolute inset-0 opacity-[0.02]"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+            backgroundSize: "40px 40px",
+            animation: "gridPan 8s linear infinite",
+          }}
+        />
+        {/* Orbs */}
+        <div
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-full"
+          style={{
+            background:
+              "radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(139,92,246,0.05) 0%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle, rgba(59,130,246,0.04) 0%, transparent 70%)",
+          }}
+        />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
         {/* ── Error ── */}
-        {error && activeTab === "dashboard" && <ErrorBanner message={error} />}
+        {error && <ErrorBanner message={error} />}
 
         {/* ── Loading ── */}
         {isLoading && !data && <Spinner />}
 
-        {/* ════ DASHBOARD ════ */}
-        {activeTab === "dashboard" && data && (
-          <DashboardListView rates={rates} allCodes={allCodes} />
-        )}
-
-        {/* ════ HISTORICAL ════ */}
-        {activeTab === "historical" && <HistoricalTab allCodes={allCodes} />}
-
-        {/* ════ CONVERT ════ */}
-        {activeTab === "convert-api" && <ConvertTab allCodes={allCodes} />}
-
-        {/* ════ TIMEFRAME ════ */}
-        {activeTab === "timeframe" && <TimeframeTab allCodes={allCodes} />}
-
-        {/* ════ CHANGE ════ */}
-        {activeTab === "change" && <ChangeTab />}
+        {/* ── Content ── */}
+        <div className="page-fade delay-200">
+          {data && <DashboardListView rates={rates} allCodes={allCodes} />}
+        </div>
       </div>
     </div>
   );

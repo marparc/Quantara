@@ -17,7 +17,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const base =
-    "inline-flex items-center justify-center font-semibold transition-all duration-200 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed select-none";
+    "inline-flex items-center cursor-pointer justify-center font-semibold transition-all duration-200 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed select-none";
 
   const variants: Record<ButtonVariant, string> = {
     primary:
