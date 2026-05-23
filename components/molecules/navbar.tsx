@@ -3,9 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -140,29 +142,30 @@ export function Navbar() {
 
           {/* ── Right side ── */}
           <div className="flex items-center gap-2">
-            <Link href="/">
-              <button className="ghost-btn">Exchange</button>
-            </Link>
+            <button
+              className="ghost-btn"
+              onClick={() => router.push("/exchange")}
+            >
+              Exchange
+            </button>
 
-            <Link href="/convert">
-              <button className="gem-btn">
-                Convert
-                <svg
-                  width="14"
-                  height="14"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                  />
-                </svg>
-              </button>
-            </Link>
+            <button className="gem-btn" onClick={() => router.push("/convert")}>
+              Convert
+              <svg
+                width="14"
+                height="14"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                />
+              </svg>
+            </button>
           </div>
         </nav>
 

@@ -2,9 +2,14 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Button } from "@/components/atoms/button";
+
+//hooks
 import { useExchangeRates } from "@/hooks/useExchangeRate";
 import { useChange } from "@/hooks/useChange";
+
+//components
+import { CurrencyFlag } from "@/components/molecules/currency-flag";
+import { Button } from "@/components/atoms/button";
 
 //helpers
 import { CURRENCY_TO_COUNTRY } from "@/constants/currency-to-country";
@@ -13,11 +18,6 @@ import { PREVIEW_CODES } from "@/constants/preview-codes";
 import { todayStr } from "@/helpers/date";
 import { daysAgoStr } from "@/helpers/date";
 import { formatRate } from "@/helpers/rate";
-
-function getFlagUrl(code: string) {
-  const c = CURRENCY_TO_COUNTRY[code];
-  return c ? `https://flagsapi.com/${c.toUpperCase()}/flat/64.png` : null;
-}
 
 // ─── useInView hook ───────────────────────────────────────────────────────────
 function useInView(threshold = 0.15) {
@@ -38,21 +38,6 @@ function useInView(threshold = 0.15) {
     return () => obs.disconnect();
   }, [threshold]);
   return { ref, inView };
-}
-
-// ─── FlagImg ──────────────────────────────────────────────────────────────────
-function FlagImg({ code, size = 20 }: { code: string; size?: number }) {
-  const url = getFlagUrl(code);
-  if (!url) return <span className="text-lg">🌐</span>;
-  return (
-    <img
-      src={url}
-      alt={code}
-      width={size}
-      height={size}
-      className="object-cover flex-shrink-0"
-    />
-  );
 }
 
 // ─── Animated number counter ──────────────────────────────────────────────────
@@ -323,7 +308,7 @@ function Hero({ rateCount }: { rateCount: number }) {
 
       {/* CTAs */}
       <div className="animate-fade-up delay-300 relative flex items-center gap-3 flex-wrap justify-center">
-        <Link href="/rates">
+        <Link href="/exchange">
           <Button variant="primary" size="lg">
             View Live Rates
             <svg
@@ -459,7 +444,7 @@ function RatesPreview({ rates }: { rates: Record<string, number> }) {
                   }}
                 >
                   <div className="col-span-2 flex items-center gap-3">
-                    <FlagImg code={r.code} size={20} />
+                    <CurrencyFlag code={r.code} />
                     <div>
                       <p className="text-sm font-semibold text-zinc-100">
                         {r.code}
@@ -584,7 +569,7 @@ function TopMovers() {
                   />
 
                   <div className="flex items-center gap-3">
-                    <FlagImg code={m.code} size={22} />
+                    <CurrencyFlag code={m.code} />
                     <div>
                       <p className="text-sm font-semibold text-zinc-100">
                         {m.code}
@@ -711,7 +696,7 @@ function Ticker({ rates }: { rates: Record<string, number> }) {
               key={`${code}-${i}`}
               className="flex items-center gap-2 flex-shrink-0"
             >
-              <FlagImg code={code} size={16} />
+              <CurrencyFlag code={code} />
               <span className="text-xs font-medium text-zinc-400">{code}</span>
               <span className="text-xs font-mono text-zinc-300 tabular-nums">
                 {formatRate(rate)}
@@ -776,15 +761,69 @@ function Contact() {
 
             <div className="space-y-4">
               {[
-                { icon: "✉️", label: "Email", value: "hello@quantara.io" },
-                { icon: "📄", label: "API Access", value: "docs@quantara.io" },
-                { icon: "💬", label: "Support", value: "support@quantara.io" },
+                {
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                      />
+                    </svg>
+                  ),
+                  label: "Email",
+                  value: "hello@quantara.io",
+                },
+                {
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
+                      />
+                    </svg>
+                  ),
+                  label: "API Access",
+                  value: "docs@quantara.io",
+                },
+                {
+                  icon: (
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={1.5}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"
+                      />
+                    </svg>
+                  ),
+                  label: "Support",
+                  value: "support@quantara.io",
+                },
               ].map((c) => (
                 <div
                   key={c.label}
                   className="flex items-center gap-4 p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.10] transition-all"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-base flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-zinc-400 flex-shrink-0">
                     {c.icon}
                   </div>
                   <div>
