@@ -61,7 +61,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className={wrapperClasses}>
           {/* Prefix */}
           {prefix && (
-            <span className="text-xs text-zinc-500 font-mono flex-shrink-0">
+            <span className="text-xs text-zinc-500 font-mono shrink-0">
               {prefix}
             </span>
           )}
@@ -78,7 +78,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
           {/* Suffix */}
           {suffix && (
-            <span className="text-xs text-zinc-500 font-mono flex-shrink-0">
+            <span className="text-xs text-zinc-500 font-mono shrink-0">
               {suffix}
             </span>
           )}

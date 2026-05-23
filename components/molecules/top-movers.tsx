@@ -69,7 +69,7 @@ export function TopMovers() {
             {Array.from({ length: 6 }).map((_, i) => (
               <div
                 key={i}
-                className="h-20 rounded-xl border border-white/[0.06] bg-white/[0.02] animate-pulse"
+                className="h-20 rounded-xl border border-white/6 bg-white/2 animate-pulse"
               />
             ))}
           </div>
@@ -81,7 +81,7 @@ export function TopMovers() {
               return (
                 <div
                   key={m.code}
-                  className="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl border border-white/[0.06] hover:border-white/[0.12] transition-all duration-300 group"
+                  className="relative overflow-hidden flex items-center justify-between px-5 py-4 rounded-xl border border-white/6 hover:border-white/12 transition-all duration-300 group"
                   style={{
                     background:
                       "linear-gradient(135deg, rgba(10,11,20,0.9) 0%, rgba(8,9,15,0.95) 100%)",
@@ -96,8 +96,8 @@ export function TopMovers() {
                   <div
                     className={`absolute bottom-0 left-0 h-0.5 transition-all duration-1000 ${
                       up
-                        ? "bg-gradient-to-r from-blue-500/60 to-blue-400/20"
-                        : "bg-gradient-to-r from-red-500/60 to-red-400/20"
+                        ? "bg-linear-to-r from-blue-500/60 to-blue-400/20"
+                        : "bg-linear-to-r from-red-500/60 to-red-400/20"
                     }`}
                     style={{
                       width: inView ? `${barW}%` : "0%",

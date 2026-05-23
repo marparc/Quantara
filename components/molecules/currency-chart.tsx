@@ -50,7 +50,7 @@ export function CurrencyChart({
           "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
       }}
     >
-      <div className="h-px w-full bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
+      <div className="h-px w-full bg-linear-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-5 pb-4">
         <div className="flex items-center gap-2">
           <span className="text-sm font-semibold text-zinc-200">
@@ -60,7 +60,7 @@ export function CurrencyChart({
             <div className="w-3.5 h-3.5 rounded-full border-t border-blue-400 animate-spin" />
           )}
         </div>
-        <div className="flex gap-1 p-1 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+        <div className="flex gap-1 p-1 rounded-xl bg-white/3 border border-white/5">
           {PERIODS.map((p) => (
             <button
               key={p.label}
@@ -160,7 +160,7 @@ export function CurrencyChart({
             </AreaChart>
           </ResponsiveContainer>
         ) : (
-          <div className="h-[300px] flex items-center justify-center">
+          <div className="h-75 flex items-center justify-center">
             <div className="flex flex-col items-center gap-3 text-zinc-600">
               <div className="w-6 h-6 rounded-full border-t border-blue-400/50 animate-spin" />
               <span className="text-xs font-mono">Loading chart data…</span>

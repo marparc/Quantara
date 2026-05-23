@@ -56,9 +56,9 @@ export function RatesPreview({ rates }: RatesPreviewProps) {
               "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
           }}
         >
-          <div className="h-px w-full bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
+          <div className="h-px w-full bg-linear-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
 
-          <div className="grid grid-cols-4 px-5 py-3 border-b border-white/[0.05]">
+          <div className="grid grid-cols-4 px-5 py-3 border-b border-white/5">
             <p className="text-xs font-medium text-zinc-500 uppercase tracking-wider col-span-2">
               Currency
             </p>
@@ -74,20 +74,20 @@ export function RatesPreview({ rates }: RatesPreviewProps) {
             ? Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="grid grid-cols-4 px-5 py-4 border-b border-white/[0.04] animate-pulse"
+                  className="grid grid-cols-4 px-5 py-4 border-b border-white/4 animate-pulse"
                 >
                   <div className="col-span-2 flex items-center gap-3">
-                    <div className="w-5 h-5 rounded bg-white/[0.05]" />
-                    <div className="h-3 w-20 rounded bg-white/[0.05]" />
+                    <div className="w-5 h-5 rounded bg-white/5" />
+                    <div className="h-3 w-20 rounded bg-white/5" />
                   </div>
-                  <div className="h-3 w-16 rounded bg-white/[0.05] ml-auto self-center" />
-                  <div className="h-3 w-10 rounded bg-white/[0.05] ml-auto self-center" />
+                  <div className="h-3 w-16 rounded bg-white/5 ml-auto self-center" />
+                  <div className="h-3 w-10 rounded bg-white/5 ml-auto self-center" />
                 </div>
               ))
             : rows.map((r, i) => (
                 <div
                   key={r.code}
-                  className="grid grid-cols-4 px-5 py-4 hover:bg-white/[0.03] transition-all duration-200 group"
+                  className="grid grid-cols-4 px-5 py-4 hover:bg-white/3 transition-all duration-200 group"
                   style={{
                     borderBottom:
                       i < rows.length - 1

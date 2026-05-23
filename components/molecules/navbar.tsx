@@ -103,7 +103,7 @@ export function Navbar() {
         <nav className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
           {/* ── Logo ── */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="relative flex-shrink-0 logo-wrap">
+            <div className="relative shrink-0 logo-wrap">
               {/* Radial halo behind logo */}
               <div
                 className="absolute inset-0 rounded-full pointer-events-none"

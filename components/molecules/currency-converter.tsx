@@ -60,7 +60,7 @@ export function CurrencyConverter({
           "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
       }}
     >
-      <div className="h-px w-full bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
+      <div className="h-px w-full bg-linear-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
       <div className="p-5 flex flex-col flex-1">
         <p className="text-xs text-zinc-500 uppercase tracking-widest font-medium mb-5">
           Converter
@@ -82,14 +82,14 @@ export function CurrencyConverter({
 
           {/* Swap button */}
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-white/[0.05]" />
+            <div className="flex-1 h-px bg-white/5" />
             <button
               onClick={onSwap}
-              className="w-7 h-7 rounded-lg border border-white/[0.07] bg-white/[0.03] hover:bg-white/[0.06] flex items-center justify-center text-zinc-500 hover:text-zinc-300 text-xs transition-all cursor-pointer"
+              className="w-7 h-7 rounded-lg border border-white/[0.07] bg-white/3 hover:bg-white/6 flex items-center justify-center text-zinc-500 hover:text-zinc-300 text-xs transition-all cursor-pointer"
             >
               ⇅
             </button>
-            <div className="flex-1 h-px bg-white/[0.05]" />
+            <div className="flex-1 h-px bg-white/5" />
           </div>
 
           {/* Second input (FX or USD depending on isReversed) - Read-only */}

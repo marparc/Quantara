@@ -87,7 +87,7 @@ export function Contact() {
         background: "linear-gradient(180deg, #07080f 0%, #080a14 100%)",
       }}
     >
-      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-purple-500/20 to-transparent" />
 
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -104,7 +104,7 @@ export function Contact() {
             </p>
             <h2 className="text-3xl sm:text-4xl font-bold text-white leading-tight mb-5">
               Have a question or{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 want API access?
               </span>
             </h2>
@@ -118,9 +118,9 @@ export function Contact() {
               {CONTACT_ITEMS.map((c) => (
                 <div
                   key={c.label}
-                  className="flex items-center gap-4 p-4 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.10] transition-all"
+                  className="flex items-center gap-4 p-4 rounded-xl border border-white/6 bg-white/2 hover:bg-white/4 hover:border-white/10 transition-all"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-zinc-400 flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-white/4] border border-white/[0.07] flex items-center justify-center text-zinc-400 shrink-0">
                     {c.icon}
                   </div>
                   <div>
@@ -134,7 +134,7 @@ export function Contact() {
 
           {/* Right — form */}
           <div
-            className="relative rounded-2xl border border-white/[0.08] p-8 transition-all duration-700 delay-200 overflow-hidden"
+            className="relative rounded-2xl border border-white/8 p-8 transition-all duration-700 delay-200 overflow-hidden"
             style={{
               opacity: inView ? 1 : 0,
               transform: inView ? "translateX(0)" : "translateX(24px)",
@@ -142,7 +142,7 @@ export function Contact() {
                 "linear-gradient(135deg, rgba(10,11,20,0.95) 0%, rgba(8,9,15,0.98) 100%)",
             }}
           >
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
+            <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-blue-500/0 via-blue-500/40 to-purple-500/0" />
 
             {sent ? (
               <div className="flex flex-col items-center justify-center h-64 text-center gap-4">

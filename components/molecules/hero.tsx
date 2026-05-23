@@ -66,7 +66,7 @@ export function Hero({ rateCount }: HeroProps) {
       {/* Orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
-          className="absolute top-1/4 left-1/2 w-[700px] h-[700px] rounded-full"
+          className="absolute top-1/4 left-1/2 w-175 h-175 rounded-full"
           style={{
             background:
               "radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%)",
@@ -75,7 +75,7 @@ export function Hero({ rateCount }: HeroProps) {
           }}
         />
         <div
-          className="absolute top-1/2 left-1/4 w-[500px] h-[500px] rounded-full"
+          className="absolute top-1/2 left-1/4 w-125 h-125 rounded-full"
           style={{
             background:
               "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)",
@@ -83,7 +83,7 @@ export function Hero({ rateCount }: HeroProps) {
           }}
         />
         <div
-          className="absolute bottom-1/4 right-1/5 w-[400px] h-[400px] rounded-full"
+          className="absolute bottom-1/4 right-1/5 w-100 h-100 rounded-full"
           style={{
             background:
               "radial-gradient(circle, rgba(168,85,247,0.05) 0%, transparent 70%)",

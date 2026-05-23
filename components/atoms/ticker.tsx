@@ -19,7 +19,7 @@ export function Ticker({ rates }: TickerProps) {
 
   return (
     <div
-      className="py-5 border-y border-white/[0.05] overflow-hidden relative"
+      className="py-5 border-y border-white/5 overflow-hidden relative"
       style={{
         background:
           "linear-gradient(90deg, #07080f 0%, #0a0b16 50%, #07080f 100%)",
@@ -47,7 +47,7 @@ export function Ticker({ rates }: TickerProps) {
         {items.map((code, i) => (
           <div
             key={`${code}-${i}`}
-            className="flex items-center gap-2 flex-shrink-0"
+            className="flex items-center gap-2 shrink-0"
           >
             <CurrencyFlag code={code} />
             <span className="text-xs font-medium text-zinc-400">{code}</span>
