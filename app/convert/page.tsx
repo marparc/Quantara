@@ -1,63 +1,19 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { useConvert } from "@/hooks/useConvert";
+import { useExchangeRates } from "@/hooks/useExchangeRate";
 import { formatRate } from "@/helpers/rate";
+import { getCurrencyInfo } from "@/helpers/currency";
+import { getFlagUrl } from "@/helpers/flag";
+import { POPULAR_PAIRS } from "@/constants/popular-pairs";
+import { QUICK_AMOUNTS } from "@/constants/quick-amounts";
 
 // ─── Types & constants ───────────────────────────────────────────────────────
 
 interface CurrencyMeta {
   code: string;
   name: string;
-  flag: string;
-}
-
-const CURRENCIES: CurrencyMeta[] = [
-  { code: "USD", name: "US Dollar", flag: "🇺🇸" },
-  { code: "EUR", name: "Euro", flag: "🇪🇺" },
-  { code: "GBP", name: "British Pound", flag: "🇬🇧" },
-  { code: "JPY", name: "Japanese Yen", flag: "🇯🇵" },
-  { code: "PHP", name: "Philippine Peso", flag: "🇵🇭" },
-  { code: "KRW", name: "South Korean Won", flag: "🇰🇷" },
-  { code: "CNY", name: "Chinese Yuan", flag: "🇨🇳" },
-  { code: "AUD", name: "Australian Dollar", flag: "🇦🇺" },
-  { code: "CAD", name: "Canadian Dollar", flag: "🇨🇦" },
-  { code: "CHF", name: "Swiss Franc", flag: "🇨🇭" },
-  { code: "SGD", name: "Singapore Dollar", flag: "🇸🇬" },
-  { code: "HKD", name: "Hong Kong Dollar", flag: "🇭🇰" },
-  { code: "INR", name: "Indian Rupee", flag: "🇮🇳" },
-  { code: "MXN", name: "Mexican Peso", flag: "🇲🇽" },
-  { code: "BRL", name: "Brazilian Real", flag: "🇧🇷" },
-  { code: "SEK", name: "Swedish Krona", flag: "🇸🇪" },
-  { code: "NOK", name: "Norwegian Krone", flag: "🇳🇴" },
-  { code: "DKK", name: "Danish Krone", flag: "🇩🇰" },
-  { code: "NZD", name: "New Zealand Dollar", flag: "🇳🇿" },
-  { code: "ZAR", name: "South African Rand", flag: "🇿🇦" },
-  { code: "THB", name: "Thai Baht", flag: "🇹🇭" },
-  { code: "IDR", name: "Indonesian Rupiah", flag: "🇮🇩" },
-  { code: "MYR", name: "Malaysian Ringgit", flag: "🇲🇾" },
-  { code: "TRY", name: "Turkish Lira", flag: "🇹🇷" },
-  { code: "AED", name: "UAE Dirham", flag: "🇦🇪" },
-  { code: "SAR", name: "Saudi Riyal", flag: "🇸🇦" },
-  { code: "BTC", name: "Bitcoin", flag: "₿" },
-  { code: "ETH", name: "Ethereum", flag: "⟠" },
-];
-
-const POPULAR_PAIRS = [
-  { from: "USD", to: "EUR" },
-  { from: "USD", to: "PHP" },
-  { from: "EUR", to: "GBP" },
-  { from: "USD", to: "JPY" },
-  { from: "BTC", to: "USD" },
-  { from: "USD", to: "KRW" },
-];
-
-const QUICK_AMOUNTS = [1, 5, 10, 50, 100, 500, 1000];
-
-function getCurrencyMeta(code: string): CurrencyMeta {
-  return (
-    CURRENCIES.find((c) => c.code === code) ?? { code, name: code, flag: "💱" }
-  );
 }
 
 // ─── Shared card styles ──────────────────────────────────────────────────────
@@ -81,6 +37,37 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
+// ─── Inline flag (mirrors CurrencyFlag without the import cycle) ──────────────
+
+function FlagImg({ code, size = 20 }: { code: string; size?: number }) {
+  const url = getFlagUrl(code);
+  const { name } = getCurrencyInfo(code);
+  if (!url)
+    return (
+      <span className="leading-none" style={{ fontSize: size }}>
+        🌐
+      </span>
+    );
+  return (
+    <img
+      src={url}
+      alt={`${name} flag`}
+      width={size}
+      height={size}
+      className="object-cover flex-shrink-0 rounded-sm"
+      onError={(e) => {
+        const t = e.currentTarget;
+        t.style.display = "none";
+        const s = document.createElement("span");
+        s.textContent = "🌐";
+        s.className = "leading-none";
+        s.style.fontSize = `${size}px`;
+        t.parentNode?.insertBefore(s, t);
+      }}
+    />
+  );
+}
+
 // ─── Currency dropdown ───────────────────────────────────────────────────────
 
 function CurrencySelect({
@@ -88,49 +75,204 @@ function CurrencySelect({
   onChange,
   excludeCode,
   label,
+  currencies,
 }: {
   value: string;
   onChange: (code: string) => void;
   excludeCode?: string;
   label: string;
+  currencies: CurrencyMeta[];
 }) {
-  const meta = getCurrencyMeta(value);
+  const { name: selectedName } = getCurrencyInfo(value);
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return currencies.filter(
+      (c) =>
+        c.code !== excludeCode &&
+        (c.code.toLowerCase().includes(q) || c.name.toLowerCase().includes(q))
+    );
+  }, [search, excludeCode, currencies]);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setOpen(false);
+        setSearch("");
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  useEffect(() => {
+    if (open) setTimeout(() => searchRef.current?.focus(), 10);
+  }, [open]);
+
+  function select(code: string) {
+    onChange(code);
+    setOpen(false);
+    setSearch("");
+  }
 
   return (
-    <div className="flex flex-col gap-1.5 flex-1">
+    <div className="flex flex-col gap-1.5 flex-1 relative" ref={containerRef}>
       <span className="text-[11px] text-zinc-500 font-mono uppercase tracking-widest font-medium">
         {label}
       </span>
-      {/* Full-width dropdown styled like the screenshot */}
-      <div
-        className="relative flex items-center gap-3 rounded-xl border border-white/[0.07] px-4 py-3.5 cursor-pointer w-full"
+
+      {/* Trigger */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-3 rounded-xl border border-white/[0.07] px-4 py-3 cursor-pointer w-full text-left transition-all hover:border-white/[0.14] hover:bg-white/[0.04]"
         style={{ background: "rgba(255,255,255,0.03)" }}
+        aria-haspopup="listbox"
+        aria-expanded={open}
       >
-        <span className="text-xl leading-none w-7 text-center shrink-0">
-          {meta.flag}
-        </span>
+        <FlagImg code={value} size={22} />
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-zinc-200 font-mono leading-tight">
-            {meta.code}
+            {value}
           </p>
           <p className="text-[11px] text-zinc-500 leading-tight truncate">
-            {meta.name}
+            {selectedName}
           </p>
         </div>
-        <span className="text-zinc-600 text-xs shrink-0">▾</span>
-        <select
-          className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          aria-label={label}
+        <svg
+          className="w-3.5 h-3.5 text-zinc-600 shrink-0 transition-transform duration-200"
+          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)" }}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
         >
-          {CURRENCIES.filter((c) => c.code !== excludeCode).map((c) => (
-            <option key={c.code} value={c.code}>
-              {c.flag} {c.code} — {c.name}
-            </option>
-          ))}
-        </select>
-      </div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </button>
+
+      {/* Dropdown panel */}
+      {open && (
+        <div
+          className="absolute top-full left-0 right-0 mt-1.5 rounded-xl border border-white/[0.08] z-50 flex flex-col"
+          style={{
+            background: "rgba(8,9,18,0.98)",
+            backdropFilter: "blur(16px)",
+            boxShadow:
+              "0 20px 48px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)",
+          }}
+          role="listbox"
+        >
+          {/* Search */}
+          <div className="p-2.5 border-b border-white/[0.06]">
+            <div
+              className="flex items-center gap-2 rounded-lg border border-white/[0.07] px-3 py-2 focus-within:border-blue-500/40 transition-colors"
+              style={{ background: "rgba(255,255,255,0.04)" }}
+            >
+              <svg
+                className="w-3.5 h-3.5 text-zinc-600 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              <input
+                ref={searchRef}
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search currency…"
+                className="flex-1 bg-transparent text-[12px] font-mono text-zinc-300 placeholder-zinc-600 outline-none"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="text-zinc-600 hover:text-zinc-400 text-xs transition-colors"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* List */}
+          <ul className="overflow-y-auto py-1.5" style={{ maxHeight: "224px" }}>
+            {filtered.length === 0 ? (
+              <li className="px-4 py-3 text-[11px] text-zinc-600 font-mono">
+                No results for "{search}"
+              </li>
+            ) : (
+              filtered.map((c) => {
+                const isSelected = c.code === value;
+                return (
+                  <li
+                    key={c.code}
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => select(c.code)}
+                    className={`flex items-center gap-3 mx-1.5 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${
+                      isSelected
+                        ? "bg-blue-500/10 border border-blue-500/20"
+                        : "border border-transparent hover:bg-white/[0.04] hover:border-white/[0.06]"
+                    }`}
+                  >
+                    <FlagImg code={c.code} size={18} />
+                    <span
+                      className={`text-[12px] font-semibold font-mono w-10 shrink-0 ${
+                        isSelected ? "text-blue-300" : "text-zinc-200"
+                      }`}
+                    >
+                      {c.code}
+                    </span>
+                    <span className="text-[11px] text-zinc-500 truncate flex-1">
+                      {c.name}
+                    </span>
+                    {isSelected && (
+                      <svg
+                        className="w-3.5 h-3.5 text-blue-400 shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2.5}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    )}
+                  </li>
+                );
+              })
+            )}
+          </ul>
+
+          {/* Footer count */}
+          <div className="px-4 py-2 border-t border-white/[0.05]">
+            <p className="text-[10px] text-zinc-700 font-mono">
+              {filtered.length} of {currencies.length} currencies
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -162,6 +304,92 @@ function StatCard({
   );
 }
 
+// ─── Inline Converter ────────────────────────────────────────────────────────
+
+function InlineConverter({
+  fromCode,
+  toCode,
+  fromAmount,
+  toAmount,
+  isLoading,
+  onFromAmountChange,
+  onSwap,
+  onConvert,
+}: {
+  fromCode: string;
+  toCode: string;
+  fromAmount: string;
+  toAmount: string;
+  isLoading: boolean;
+  onFromAmountChange: (val: string) => void;
+  onSwap: () => void;
+  onConvert: () => void;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      {/* From */}
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[11px] text-zinc-500 font-mono uppercase tracking-widest font-medium">
+          {fromCode}
+        </span>
+        <div
+          className="flex items-center gap-2 rounded-xl border border-white/[0.07] px-4 py-3.5 focus-within:border-blue-500/40 transition-colors"
+          style={{ background: "rgba(255,255,255,0.03)" }}
+        >
+          <span className="text-xs font-mono text-zinc-600 shrink-0">
+            {fromCode}
+          </span>
+          <input
+            type="number"
+            inputMode="decimal"
+            value={fromAmount}
+            onChange={(e) => onFromAmountChange(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && onConvert()}
+            placeholder="0"
+            className="flex-1 min-w-0 bg-transparent text-sm font-semibold font-mono text-zinc-200 outline-none placeholder-zinc-700 tabular-nums"
+          />
+        </div>
+      </div>
+
+      {/* Swap */}
+      <div className="flex items-center gap-3">
+        <div className="flex-1 h-px bg-white/[0.05]" />
+        <button
+          onClick={onSwap}
+          aria-label="Swap currencies"
+          className="w-7 h-7 rounded-lg border border-white/[0.07] flex items-center justify-center text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12] text-xs transition-all cursor-pointer"
+          style={{ background: "rgba(255,255,255,0.02)" }}
+        >
+          ⇅
+        </button>
+        <div className="flex-1 h-px bg-white/[0.05]" />
+      </div>
+
+      {/* To (read-only) */}
+      <div className="flex flex-col gap-1.5">
+        <span className="text-[11px] text-zinc-500 font-mono uppercase tracking-widest font-medium">
+          {toCode}
+        </span>
+        <div
+          className="flex items-center gap-2 rounded-xl border border-white/[0.07] px-4 py-3.5"
+          style={{ background: "rgba(255,255,255,0.02)" }}
+        >
+          <span className="text-xs font-mono text-zinc-600 shrink-0">
+            {toCode}
+          </span>
+          <input
+            type="text"
+            readOnly
+            value={isLoading ? "…" : toAmount}
+            placeholder="0"
+            className="flex-1 min-w-0 bg-transparent text-sm font-semibold font-mono text-zinc-400 outline-none placeholder-zinc-700 cursor-default tabular-nums"
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ────────────────────────────────────────────────────────────────────
 
 export function CurrencyConverterPage() {
@@ -171,9 +399,21 @@ export function CurrencyConverterPage() {
   const [quickAmount, setQuickAmount] = useState<number | null>(null);
 
   const { convertCurrency, result, rate, isLoading, error } = useConvert();
+  const { rates: exchangeRates } = useExchangeRates();
   const [popularRates, setPopularRates] = useState<Record<string, number>>({});
 
-  // Fetch popular pair rates on mount
+  // Build live currency list from exchange rate data
+  const currencies: CurrencyMeta[] = useMemo(() => {
+    return Object.keys(exchangeRates)
+      .map((key) => key.replace(/^USD/, ""))
+      .filter((code) => code.length === 3 && !/^\d/.test(code))
+      .map((code) => {
+        const { name } = getCurrencyInfo(code);
+        return { code, name };
+      })
+      .sort((a, b) => a.code.localeCompare(b.code));
+  }, [exchangeRates]);
+
   const fetchPopularRate = useCallback(async (from: string, to: string) => {
     try {
       const params = new URLSearchParams({ from, to, amount: "1" });
@@ -194,7 +434,6 @@ export function CurrencyConverterPage() {
     POPULAR_PAIRS.forEach(({ from, to }) => fetchPopularRate(from, to));
   }, [fetchPopularRate]);
 
-  // Convert on pair change
   const doConvert = useCallback(() => {
     const amt = parseFloat(fromAmount);
     if (isNaN(amt) || amt <= 0) return;
@@ -235,19 +474,17 @@ export function CurrencyConverterPage() {
   return (
     <section className="w-full flex justify-center px-4 py-2">
       <div className="space-y-5 w-full max-w-2xl">
-        {/* ── Header label ── */}
-        <p className="text-xs text-zinc-500 uppercase tracking-widest font-medium">
+        <p className="text-xs text-zinc-500 mt-10 uppercase tracking-widest font-medium">
           Currency Converter
         </p>
 
         {/* ── Main converter card ── */}
         <div
-          className="rounded-2xl border border-white/[0.07] overflow-hidden"
+          className="rounded-2xl border border-white/[0.07] overflow-visible"
           style={cardBg}
         >
           <CardAccent />
           <div className="p-5 space-y-4">
-            {/* Row 1: FROM and TO dropdowns side by side, full width */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
               <CurrencySelect
                 label="From"
@@ -257,6 +494,7 @@ export function CurrencyConverterPage() {
                   setQuickAmount(null);
                 }}
                 excludeCode={toCode}
+                currencies={currencies}
               />
               <CurrencySelect
                 label="To"
@@ -266,40 +504,21 @@ export function CurrencyConverterPage() {
                   setQuickAmount(null);
                 }}
                 excludeCode={fromCode}
+                currencies={currencies}
               />
             </div>
 
-            {/* Row 2: amount input + swap + result — all on one line */}
-            <div className="flex items-center gap-3">
-              <input
-                type="number"
-                inputMode="decimal"
-                value={fromAmount}
-                onChange={(e) => setFromAmount(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && doConvert()}
-                placeholder="1"
-                className="flex-1 min-w-0 rounded-xl border border-white/[0.07] px-4 py-3.5 text-2xl font-semibold font-mono text-zinc-200 outline-none focus:border-blue-500/40 transition-colors"
-                style={{ background: "rgba(255,255,255,0.03)" }}
-              />
-              <button
-                onClick={handleSwap}
-                aria-label="Swap currencies"
-                className="w-10 h-10 shrink-0 rounded-xl border border-white/[0.07] flex items-center justify-center text-zinc-400 hover:text-zinc-100 hover:bg-white/5 transition-all cursor-pointer text-base"
-                style={{ background: "rgba(255,255,255,0.02)" }}
-              >
-                ⇅
-              </button>
-              <input
-                type="text"
-                readOnly
-                value={isLoading ? "…" : toAmount}
-                placeholder="—"
-                className="flex-1 min-w-0 rounded-xl border border-white/[0.07] px-4 py-3.5 text-2xl font-semibold font-mono text-zinc-400 outline-none cursor-default"
-                style={{ background: "rgba(255,255,255,0.02)" }}
-              />
-            </div>
+            <InlineConverter
+              fromCode={fromCode}
+              toCode={toCode}
+              fromAmount={fromAmount}
+              toAmount={toAmount}
+              isLoading={isLoading}
+              onFromAmountChange={setFromAmount}
+              onSwap={handleSwap}
+              onConvert={doConvert}
+            />
 
-            {/* Convert button — full width */}
             <button
               onClick={doConvert}
               disabled={isLoading || !fromAmount}
@@ -311,14 +530,12 @@ export function CurrencyConverterPage() {
               {isLoading ? "Converting…" : "Convert"}
             </button>
 
-            {/* Error */}
             {error && (
               <p className="text-[11px] text-red-400 font-mono text-center -mt-1">
                 {error}
               </p>
             )}
 
-            {/* Rate footer */}
             {rate !== null && (
               <p className="text-[11px] text-zinc-600 font-mono text-center leading-relaxed -mt-1">
                 1 {fromCode} = {formatRate(rate)} {toCode}
@@ -330,7 +547,6 @@ export function CurrencyConverterPage() {
 
         {/* ── Rate breakdown + Quick convert ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Rate breakdown */}
           <div
             className="rounded-2xl border border-white/[0.07] overflow-hidden"
             style={cardBg}
@@ -365,7 +581,6 @@ export function CurrencyConverterPage() {
             </div>
           </div>
 
-          {/* Quick convert */}
           <div
             className="rounded-2xl border border-white/[0.07] overflow-hidden"
             style={cardBg}
@@ -428,10 +643,9 @@ export function CurrencyConverterPage() {
             <SectionLabel>Popular Pairs</SectionLabel>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {POPULAR_PAIRS.map(({ from, to }) => {
-                const fromMeta = getCurrencyMeta(from);
+                const { name: fromName } = getCurrencyInfo(from);
                 const pairRate = popularRates[`${from}_${to}`];
                 const isActive = fromCode === from && toCode === to;
-
                 return (
                   <button
                     key={`${from}_${to}`}
@@ -442,15 +656,13 @@ export function CurrencyConverterPage() {
                         : "border-white/[0.05] hover:border-white/[0.10] hover:bg-white/[0.02]"
                     }`}
                   >
-                    <span className="text-lg leading-none w-6 text-center shrink-0">
-                      {fromMeta.flag}
-                    </span>
+                    <FlagImg code={from} size={18} />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-zinc-200 font-mono">
                         {from}/{to}
                       </p>
                       <p className="text-[11px] text-zinc-500 truncate">
-                        {fromMeta.name}
+                        {fromName}
                       </p>
                     </div>
                     <p className="text-[11px] text-zinc-400 font-mono tabular-nums shrink-0">

@@ -35,3 +35,27 @@ h5,
 h6 {
   font-family: var(--font-orbitron), sans-serif;
 }
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a3a;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3d3d55;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a3a transparent;
+}

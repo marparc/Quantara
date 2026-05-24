@@ -37,7 +37,6 @@ export function useExchangeRates(
     setError(null);
 
     try {
-      // Call your own API route — no key needed client-side
       const response = await fetch("/api/rates/live");
 
       if (!response.ok) {
@@ -48,11 +47,12 @@ export function useExchangeRates(
 
       const json: ExchangeRateData = await response.json();
 
-      if (!json.success) {
+      // Accept data if quotes exist, even if success flag is false
+      if (!json.quotes || Object.keys(json.quotes).length === 0) {
         throw new Error("API returned an unsuccessful response.");
       }
 
-      setData(json);
+      setData({ ...json, success: true });
       setLastUpdated(new Date());
     } catch (err) {
       setError(
@@ -72,10 +72,6 @@ export function useExchangeRates(
     }
   }, [fetchRates, autoRefreshMs]);
 
-  /**
-   * Get the exchange rate between two currencies (using USD as the pivot).
-   * Returns null if data isn't loaded or the currency isn't found.
-   */
   const getRate = useCallback(
     (from: string, to: string): number | null => {
       if (!data?.quotes) return null;
@@ -83,18 +79,15 @@ export function useExchangeRates(
       const fromUpper = from.toUpperCase();
       const toUpper = to.toUpperCase();
 
-      // Direct USD → target
       if (fromUpper === "USD") {
         return data.quotes[`USD${toUpper}`] ?? null;
       }
 
-      // target → USD
       if (toUpper === "USD") {
         const fromRate = data.quotes[`USD${fromUpper}`];
         return fromRate ? 1 / fromRate : null;
       }
 
-      // Cross rate: from → USD → to
       const fromRate = data.quotes[`USD${fromUpper}`];
       const toRate = data.quotes[`USD${toUpper}`];
       if (!fromRate || !toRate) return null;
@@ -104,10 +97,6 @@ export function useExchangeRates(
     [data]
   );
 
-  /**
-   * Convert an amount from one currency to another.
-   * Returns null if the rate cannot be determined.
-   */
   const convert = useCallback(
     (amount: number, from: string, to: string): number | null => {
       const rate = getRate(from, to);
