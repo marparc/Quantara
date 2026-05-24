@@ -12,3 +12,6 @@ Features:
 3.) Historical Rates - Fetch exchange rates for a specific date for basic comparison and learning purposes.
 4.) Timeframe Data - Retrieve rates across a date range for simple analysis or charting.
 5.) Currency Change Overview - Displays percentage change between two selected dates.
+
+https://github.com/user-attachments/assets/2fb2509e-9df2-40aa-b4fa-0852969b83d2
+
