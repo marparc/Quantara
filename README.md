@@ -14,7 +14,6 @@ Features:
 5.) Currency Change Overview - Displays percentage change between two selected dates.
 
 
-Screenshots:
 Landing Page
 <img width="1871" height="1000" alt="image" src="https://github.com/user-attachments/assets/27782850-3683-4715-befe-aa92cf3a5906" />
 Exchange Rates
